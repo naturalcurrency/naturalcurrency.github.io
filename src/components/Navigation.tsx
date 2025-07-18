@@ -16,7 +16,7 @@ export function Navigation() {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <div className="text-2xl font-bold bg-gradient-text bg-clip-text text-transparent">
-              Carry & Conquer
+              NATURAL CURRENCY
             </div>
           </Link>
           

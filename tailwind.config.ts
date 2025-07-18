@@ -62,16 +62,20 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				'accent-green': 'hsl(var(--accent-green))',
-				'accent-teal': 'hsl(var(--accent-teal))',
-				'accent-cyan': 'hsl(var(--accent-cyan))',
-				'accent-blue': 'hsl(var(--accent-blue))'
+				'earth-brown': 'hsl(var(--earth-brown))',
+				'forest-green': 'hsl(var(--forest-green))',
+				'mountain-blue': 'hsl(var(--mountain-blue))',
+				'stone-gray': 'hsl(var(--stone-gray))',
+				'glacier-blue': 'hsl(var(--glacier-blue))',
+				'mineral-gold': 'hsl(var(--mineral-gold))'
 			},
 			backgroundImage: {
 				'gradient-hero': 'var(--gradient-hero)',
 				'gradient-card': 'var(--gradient-card)',
 				'gradient-button': 'var(--gradient-button)',
-				'gradient-text': 'var(--gradient-text)'
+				'gradient-text': 'var(--gradient-text)',
+				'gradient-earth': 'var(--gradient-earth)',
+				'gradient-mountain': 'var(--gradient-mountain)'
 			},
 			boxShadow: {
 				'glow': 'var(--shadow-glow)',

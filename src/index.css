@@ -2,64 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Carry & Conquer Design System - Private Equity Platform
-All colors MUST be HSL for proper theming.
+/* Natural Currency Design System - Earth's Resources Platform
+All colors MUST be HSL for proper theming - Nature-inspired palette.
 */
 
 @layer base {
   :root {
-    /* Dark theme as default */
-    --background: 15 15 15; /* Dark background */
-    --foreground: 0 0% 98%;
+    /* Deep earth tones as default */
+    --background: 210 25% 8%; /* Deep blue-black like night sky */
+    --foreground: 210 10% 95%;
 
-    --card: 20 20 20;
-    --card-foreground: 0 0% 98%;
+    --card: 210 20% 12%;
+    --card-foreground: 210 10% 95%;
 
-    --popover: 20 20 20;
-    --popover-foreground: 0 0% 98%;
+    --popover: 210 20% 12%;
+    --popover-foreground: 210 10% 95%;
 
-    --primary: 142 76% 36%; /* Green as primary */
-    --primary-foreground: 0 0% 100%;
+    --primary: 180 25% 45%; /* Deep teal like mountain lakes */
+    --primary-foreground: 210 10% 95%;
     
-    --accent-green: 142 76% 36%; /* Main green accent */
-    --accent-teal: 180 84% 40%; /* Complementary teal */
-    --accent-cyan: 190 95% 45%; /* Bright cyan accent */
-    --accent-blue: 210 98% 55%; /* Blue accent */
+    --earth-brown: 25 35% 25%; /* Rich earth brown */
+    --forest-green: 140 40% 30%; /* Deep forest green */
+    --mountain-blue: 210 50% 35%; /* Mountain blue */
+    --stone-gray: 220 10% 35%; /* Stone gray */
+    --glacier-blue: 195 60% 50%; /* Glacier blue */
+    --mineral-gold: 45 85% 60%; /* Mineral gold */
     
     /* Base Colors */
-    --secondary: 240 8% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 15% 18%;
+    --secondary-foreground: 210 10% 90%;
     
-    --muted: 240 8% 15%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 210 15% 15%;
+    --muted-foreground: 210 8% 60%;
     
-    --accent: 180 84% 40%; /* Teal as main accent */
-    --accent-foreground: 0 0% 100%;
+    --accent: 195 60% 50%; /* Glacier blue as accent */
+    --accent-foreground: 210 25% 8%;
     
     --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 210 10% 95%;
     
-    --border: 240 8% 25%;
-    --input: 240 8% 25%;
-    --ring: 142 76% 36%;
+    --border: 210 15% 20%;
+    --input: 210 15% 20%;
+    --ring: 180 25% 45%;
     
-    --radius: 0.75rem;
+    --radius: 1rem;
     
-    /* Green-focused gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(15 15 15) 0%, hsl(20 20 20) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(20 20 20) 0%, hsl(25 25 25) 100%);
-    --gradient-button: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(180 84% 40%) 100%);
-    --gradient-text: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(190 95% 45%) 100%);
-    --gradient-green: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(142 76% 46%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(180 84% 40%) 0%, hsl(210 98% 55%) 100%);
+    /* Nature-inspired gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(210 25% 8%) 0%, hsl(210 30% 12%) 50%, hsl(195 40% 15%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(210 20% 12%) 0%, hsl(210 25% 15%) 100%);
+    --gradient-button: linear-gradient(135deg, hsl(180 25% 45%) 0%, hsl(195 60% 50%) 100%);
+    --gradient-text: linear-gradient(135deg, hsl(195 60% 50%) 0%, hsl(45 85% 60%) 100%);
+    --gradient-earth: linear-gradient(135deg, hsl(25 35% 25%) 0%, hsl(140 40% 30%) 100%);
+    --gradient-mountain: linear-gradient(135deg, hsl(210 50% 35%) 0%, hsl(195 60% 50%) 100%);
     
-    /* Shadows for dark theme */
-    --shadow-glow: 0 10px 40px hsl(142 76% 36% / 0.3);
-    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.3);
-    --shadow-lift: 0 10px 30px hsl(0 0% 0% / 0.2);
+    /* Natural shadows */
+    --shadow-glow: 0 10px 40px hsl(195 60% 50% / 0.2);
+    --shadow-card: 0 8px 25px hsl(210 25% 8% / 0.4);
+    --shadow-lift: 0 15px 35px hsl(210 25% 8% / 0.3);
     
     /* Typography */
     --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

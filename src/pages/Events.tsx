@@ -6,28 +6,28 @@ import { Calendar, MapPin, Users, ArrowRight } from "lucide-react"
 
 const upcomingEvents = [
   {
-    title: "PE Leaders Summit 2024",
+    title: "Global Carbon Markets Summit 2024",
     date: "March 15-17, 2024",
-    location: "New York, NY",
-    attendees: "500+",
-    description: "Annual gathering of top private equity executives discussing market trends and opportunities.",
-    type: "Conference"
+    location: "Geneva, Switzerland",
+    attendees: "750+",
+    description: "International summit on carbon credit trading, forest preservation initiatives, and sustainable investment strategies.",
+    type: "Summit"
   },
   {
-    title: "Healthcare Investment Forum",
+    title: "Water Rights & Resources Forum",
     date: "April 8, 2024",
-    location: "Boston, MA",
-    attendees: "200+",
-    description: "Focused discussions on healthcare sector investments and regulatory changes.",
+    location: "Singapore",
+    attendees: "300+",
+    description: "Strategic discussions on global water scarcity, aquifer rights, and blue economy investments.",
     type: "Forum"
   },
   {
-    title: "Tech PE Networking",
+    title: "Rare Earth Minerals Conference",
     date: "April 22, 2024",
-    location: "San Francisco, CA",
-    attendees: "150+",
-    description: "Networking event for technology-focused private equity professionals.",
-    type: "Networking"
+    location: "Perth, Australia",
+    attendees: "400+",
+    description: "Exploration of sustainable mining practices and critical mineral supply chains.",
+    type: "Conference"
   }
 ]
 
@@ -37,51 +37,54 @@ export default function Events() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-black">
-        {/* Wave Pattern Background */}
-        <div className="absolute inset-0 opacity-20">
+      <section className="relative pt-32 pb-20 overflow-hidden bg-gradient-hero">
+        {/* Natural landscape background */}
+        <div className="absolute inset-0 opacity-30">
           <svg viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full">
-            <path d="M0,300 C300,500 600,100 1200,400 L1200,800 L0,800 Z" fill="url(#eventsWave)" />
             <defs>
-              <linearGradient id="eventsWave" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="hsl(180 84% 40%)" stopOpacity="0.6" />
-                <stop offset="50%" stopColor="hsl(190 95% 45%)" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="hsl(142 76% 36%)" stopOpacity="0.2" />
+              <linearGradient id="forestGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="hsl(140 40% 30%)" stopOpacity="0.6" />
+                <stop offset="50%" stopColor="hsl(195 60% 50%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(25 35% 25%)" stopOpacity="0.3" />
               </linearGradient>
             </defs>
+            
+            {/* Mountain ranges */}
+            <path d="M0,400 C200,250 400,350 600,200 C800,300 1000,150 1200,300 L1200,800 L0,800 Z" fill="url(#forestGradient)" />
+            <path d="M0,500 C300,350 600,450 900,300 L1200,400 L1200,800 L0,800 Z" fill="hsl(210 25% 8%)" opacity="0.7" />
           </svg>
         </div>
 
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-32 h-16 bg-teal-500/20 rounded-full rotate-45 animate-float"></div>
-        <div className="absolute top-32 right-20 w-20 h-20 bg-green-500/20 rounded-2xl -rotate-12 animate-float" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-cyan-500/20 rounded-full animate-float" style={{ animationDelay: '0.5s' }}></div>
+        {/* Floating natural elements */}
+        <div className="absolute top-20 left-10 w-16 h-16 bg-forest-green/20 rounded-full animate-float"></div>
+        <div className="absolute top-32 right-20 w-12 h-20 bg-glacier-blue/20 rounded-full animate-float" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute bottom-20 left-1/3 w-20 h-12 bg-earth-brown/20 rounded-full animate-float" style={{ animationDelay: '0.5s' }}></div>
         
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
-              Industry
-              <span className="block text-green-400">
-                Events
+            <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight uppercase tracking-tight">
+              Resource
+              <span className="block text-glacier-blue">
+                Gatherings
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-white/70 mb-12 leading-relaxed">
-              Stay connected with the private equity ecosystem through exclusive events, 
-              conferences, and networking opportunities.
+            <p className="text-xl md:text-2xl text-foreground/70 mb-12 leading-relaxed">
+              Connect with the natural resources ecosystem through exclusive summits, 
+              sustainability conferences, and conservation networking opportunities.
             </p>
           </div>
         </div>
       </section>
 
       {/* Upcoming Events */}
-      <section className="py-20 bg-black">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Upcoming Events
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Upcoming Gatherings
             </h2>
-            <p className="text-xl text-white/70">
-              Don't miss these important industry gatherings
+            <p className="text-xl text-foreground/70">
+              Don't miss these critical natural resource events
             </p>
           </div>
 

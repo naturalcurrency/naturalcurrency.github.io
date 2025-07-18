@@ -9,12 +9,12 @@ import { Footer } from "@/components/Footer"
 
 const Index = () => {
   return (
-    <div className="min-h-screen font-primary pt-24">
+    <div className="min-h-screen font-primary bg-background">
       <Navigation />
       <HeroSection />
       
-      {/* AI Chat Assistant */}
-      <section className="py-20 bg-black">
+      {/* Natural Resource AI Assistant */}
+      <section className="py-20 bg-gradient-card">
         <PrivateEquityAIChat />
       </section>
       <StatsSection />
