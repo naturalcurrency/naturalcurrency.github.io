@@ -15,6 +15,15 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <script type="text/javascript">
+      // SPA redirect for GitHub Pages
+      if (window.location.search && window.location.search.startsWith('?/')) {
+        var path = window.location.search.substr(2).split('&').map(function(s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null, window.location.pathname.slice(0, -1) + path + window.location.hash);
+      }
+    </script>
   </head>
 
   <body>
