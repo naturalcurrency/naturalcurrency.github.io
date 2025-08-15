@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Snapshot from "./pages/Snapshot";
 import Analysis from "./pages/Analysis";
 import Events from "./pages/Events";
 import KeyDeals from "./pages/KeyDeals";
@@ -20,6 +21,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/snapshot" element={<Snapshot />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/events" element={<Events />} />
           <Route path="/key-deals" element={<KeyDeals />} />
