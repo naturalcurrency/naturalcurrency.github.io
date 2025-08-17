@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { Link, useLocation } from "react-router-dom"
 import { MetricsCarousel } from "./MetricsCarousel"
+import { useAuth } from "./AuthProvider"
 
 export function Navigation() {
   const location = useLocation()
+  const { user, signOut } = useAuth()
   
   const isActive = (path: string) => location.pathname === path
+
+  const handleSignOut = async () => {
+    await signOut()
+  }
   
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
@@ -76,12 +82,33 @@ export function Navigation() {
           
           {/* CTA Button */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" className="hidden md:inline-flex text-white/70 hover:text-white hover:bg-white/10">
-              Sign In
-            </Button>
-            <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black font-semibold transition-all duration-300 hover:scale-105 rounded-full">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <span className="hidden md:inline-flex text-white/70 text-sm">
+                  {user.email}
+                </span>
+                <Button 
+                  variant="ghost" 
+                  onClick={handleSignOut}
+                  className="hidden md:inline-flex text-white/70 hover:text-white hover:bg-white/10"
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button variant="ghost" className="hidden md:inline-flex text-white/70 hover:text-white hover:bg-white/10">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black font-semibold transition-all duration-300 hover:scale-105 rounded-full">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

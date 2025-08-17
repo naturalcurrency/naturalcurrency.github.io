@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,9 +12,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Switch } from '@/components/ui/switch'
 import { CalendarIcon, Users, TrendingUp, FileText, Calendar, Settings, Plus, Edit, Trash2, Eye, BarChart3, Activity, Globe, Leaf } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
+import { useAuth } from '@/components/AuthProvider'
+import { supabase } from '@/integrations/supabase/client'
 
 interface AnalysisReport {
-  id: number
+  id: string
   title: string
   category: string
   author: string
@@ -25,7 +28,7 @@ interface AnalysisReport {
 }
 
 interface ResourceEvent {
-  id: number
+  id: string
   title: string
   type: string
   date: string
@@ -38,7 +41,7 @@ interface ResourceEvent {
 }
 
 interface KeyDeal {
-  id: number
+  id: string
   dealName: string
   resource: string
   value: string
@@ -50,7 +53,7 @@ interface KeyDeal {
 }
 
 interface SnapshotMetric {
-  id: number
+  id: string
   label: string
   value: string
   change: string
@@ -60,32 +63,112 @@ interface SnapshotMetric {
 }
 
 export default function Admin() {
-  const [analysisReports, setAnalysisReports] = useState<AnalysisReport[]>([
-    { id: 1, title: "Global Water Resources Market Analysis", category: "Water Resources", author: "Dr. Sarah Chen", status: "published", featured: true, createdAt: "2024-01-15", views: 1850, resourceType: "Water" },
-    { id: 2, title: "Rare Earth Mining Sustainability Report", category: "Mining", author: "Michael Rodriguez", status: "published", featured: false, createdAt: "2024-01-12", views: 1240, resourceType: "Minerals" },
-    { id: 3, title: "Carbon Credit Market Dynamics", category: "Carbon Trading", author: "Dr. Elena Vasquez", status: "draft", featured: false, createdAt: "2024-01-10", views: 0, resourceType: "Carbon" }
-  ])
+  const { user, isAdmin } = useAuth()
+  const [analysisReports, setAnalysisReports] = useState<AnalysisReport[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const [resourceEvents, setResourceEvents] = useState<ResourceEvent[]>([
-    { id: 1, title: "Global Carbon Markets Summit 2024", type: "Conference", date: "2024-03-15", location: "Geneva", capacity: 800, registered: 647, status: "published", featured: true, resourceFocus: "Carbon Trading" },
-    { id: 2, title: "Sustainable Mining Workshop", type: "Workshop", date: "2024-02-20", location: "Virtual", capacity: 200, registered: 178, status: "published", featured: false, resourceFocus: "Mining" },
-    { id: 3, title: "Water Rights & Trading Forum", type: "Panel", date: "2024-04-05", location: "Cape Town", capacity: 300, registered: 0, status: "draft", featured: false, resourceFocus: "Water" }
-  ])
+  // Redirect if not admin
+  if (!user) {
+    return <Navigate to="/auth" replace />
+  }
 
-  const [keyDeals, setKeyDeals] = useState<KeyDeal[]>([
-    { id: 1, dealName: "Amazon Basin Carbon Credits", resource: "Carbon Offsets", value: "$2.8B", parties: "GreenTech Corp / Indigenous Coalition", status: "active", featured: true, region: "South America", sustainability: 95 },
-    { id: 2, dealName: "Lithium Mining Rights - Chile", resource: "Lithium", value: "$1.2B", parties: "EV Materials Inc / Chilean Gov", status: "completed", featured: true, region: "South America", sustainability: 73 },
-    { id: 3, dealName: "North Sea Wind Farm Rights", resource: "Wind Energy", value: "$4.5B", parties: "Nordic Energy / UK Crown Estate", status: "pending", featured: false, region: "Europe", sustainability: 88 }
-  ])
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="bg-gradient-card border-white/10">
+          <CardHeader>
+            <CardTitle className="text-white">Access Denied</CardTitle>
+            <CardDescription className="text-white/70">
+              You don't have admin permissions to access this page.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    )
+  }
 
-  const [snapshotMetrics, setSnapshotMetrics] = useState<SnapshotMetric[]>([
-    { id: 1, label: "GLOBAL CARBON MARKET", value: "$909B", change: "+15.3%", isPositive: true, isActive: true, category: "Carbon" },
-    { id: 2, label: "WATER FUTURES INDEX", value: "2,847", change: "+8.7%", isPositive: true, isActive: true, category: "Water" },
-    { id: 3, label: "RARE EARTH PRICES", value: "$34,200/T", change: "-3.2%", isPositive: false, isActive: true, category: "Minerals" },
-    { id: 4, label: "RENEWABLE CAPACITY", value: "3.4TW", change: "+22.1%", isPositive: true, isActive: true, category: "Energy" },
-    { id: 5, label: "FOREST CARBON CREDITS", value: "$127/TCO2", change: "+18.9%", isPositive: true, isActive: true, category: "Carbon" },
-    { id: 6, label: "CRITICAL MINERAL RESERVES", value: "47.2M MT", change: "-5.1%", isPositive: false, isActive: true, category: "Minerals" }
-  ])
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const [resourceEvents, setResourceEvents] = useState<ResourceEvent[]>([])
+  const [keyDeals, setKeyDeals] = useState<KeyDeal[]>([])
+  const [snapshotMetrics, setSnapshotMetrics] = useState<SnapshotMetric[]>([])
+
+  const loadData = async () => {
+    try {
+      const [reportsResult, eventsResult, dealsResult, metricsResult] = await Promise.all([
+        supabase.from('analysis_reports').select('*'),
+        supabase.from('events').select('*'),
+        supabase.from('key_deals').select('*'),
+        supabase.from('snapshots').select('*')
+      ])
+
+      if (reportsResult.data) {
+        setAnalysisReports(reportsResult.data.map(report => ({
+          id: report.id,
+          title: report.title,
+          category: report.tags?.[0] || 'General',
+          author: 'System',
+          status: report.status as 'published' | 'draft',
+          featured: false,
+          createdAt: new Date(report.created_at).toISOString().split('T')[0],
+          views: 0,
+          resourceType: report.tags?.[1] || 'General'
+        })))
+      }
+
+      if (eventsResult.data) {
+        setResourceEvents(eventsResult.data.map(event => ({
+          id: event.id,
+          title: event.title,
+          type: event.category || 'Event',
+          date: event.event_date ? new Date(event.event_date).toISOString().split('T')[0] : '',
+          location: event.location || '',
+          capacity: 100,
+          registered: 0,
+          status: event.status as 'published' | 'draft',
+          featured: false,
+          resourceFocus: event.category || 'General'
+        })))
+      }
+
+      if (dealsResult.data) {
+        setKeyDeals(dealsResult.data.map(deal => ({
+          id: deal.id,
+          dealName: deal.title,
+          resource: deal.description || '',
+          value: deal.deal_value ? `$${deal.deal_value}` : '$0',
+          parties: deal.client_name || '',
+          status: deal.status as 'active' | 'completed' | 'pending',
+          featured: false,
+          region: 'Global',
+          sustainability: deal.probability ? Math.round(deal.probability * 100) : 50
+        })))
+      }
+
+      if (metricsResult.data) {
+        setSnapshotMetrics(metricsResult.data.map(metric => ({
+          id: metric.id,
+          label: metric.title.toUpperCase(),
+          value: metric.value?.toString() || '0',
+          change: metric.change_percentage ? `${metric.change_percentage}%` : '0%',
+          isPositive: (metric.change_percentage || 0) >= 0,
+          isActive: true,
+          category: metric.category || 'General'
+        })))
+      }
+    } catch (error) {
+      console.error('Error loading data:', error)
+      toast({
+        title: "Error loading data",
+        description: "Failed to load admin data from database",
+        variant: "destructive"
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const [activeTab, setActiveTab] = useState("overview")
   const [showReportForm, setShowReportForm] = useState(false)
@@ -93,113 +176,156 @@ export default function Admin() {
   const [showDealForm, setShowDealForm] = useState(false)
   const [showMetricForm, setShowMetricForm] = useState(false)
 
-  const handleCreateReport = (data: any) => {
-    const newReport: AnalysisReport = {
-      id: analysisReports.length + 1,
-      title: data.title,
-      category: data.category,
-      author: data.author,
-      status: data.status,
-      featured: data.featured,
-      createdAt: new Date().toISOString().split('T')[0],
-      views: 0,
-      resourceType: data.resourceType
+  const handleCreateReport = async (data: any) => {
+    try {
+      const { error } = await supabase.from('analysis_reports').insert({
+        title: data.title,
+        content: data.content || '',
+        summary: data.summary || '',
+        status: data.status,
+        tags: [data.category, data.resourceType],
+        created_by: user?.id
+      })
+
+      if (error) throw error
+
+      await loadData()
+      setShowReportForm(false)
+      toast({ title: "Analysis report created successfully" })
+    } catch (error) {
+      console.error('Error creating report:', error)
+      toast({ 
+        title: "Error creating report", 
+        description: "Failed to create analysis report",
+        variant: "destructive" 
+      })
     }
-    setAnalysisReports([...analysisReports, newReport])
-    setShowReportForm(false)
-    toast({ title: "Analysis report created successfully" })
   }
 
-  const handleCreateEvent = (data: any) => {
-    const newEvent: ResourceEvent = {
-      id: resourceEvents.length + 1,
-      title: data.title,
-      type: data.type,
-      date: data.date,
-      location: data.location,
-      capacity: data.capacity,
-      registered: 0,
-      status: data.status,
-      featured: data.featured,
-      resourceFocus: data.resourceFocus
+  const handleCreateEvent = async (data: any) => {
+    try {
+      const { error } = await supabase.from('events').insert({
+        title: data.title,
+        description: data.description || '',
+        event_date: data.date,
+        location: data.location,
+        category: data.resourceFocus,
+        priority: 'medium',
+        status: data.status,
+        created_by: user?.id
+      })
+
+      if (error) throw error
+
+      await loadData()
+      setShowEventForm(false)
+      toast({ title: "Resource event created successfully" })
+    } catch (error) {
+      console.error('Error creating event:', error)
+      toast({ 
+        title: "Error creating event", 
+        description: "Failed to create resource event",
+        variant: "destructive" 
+      })
     }
-    setResourceEvents([...resourceEvents, newEvent])
-    setShowEventForm(false)
-    toast({ title: "Resource event created successfully" })
   }
 
-  const handleCreateDeal = (data: any) => {
-    const newDeal: KeyDeal = {
-      id: keyDeals.length + 1,
-      dealName: data.dealName,
-      resource: data.resource,
-      value: data.value,
-      parties: data.parties,
-      status: data.status,
-      featured: data.featured,
-      region: data.region,
-      sustainability: data.sustainability
+  const handleCreateDeal = async (data: any) => {
+    try {
+      const dealValue = parseFloat(data.value.replace(/[$,B]/g, '')) || 0
+      const { error } = await supabase.from('key_deals').insert({
+        title: data.dealName,
+        description: data.resource,
+        deal_value: dealValue,
+        currency: 'USD',
+        status: data.status,
+        probability: data.sustainability / 100,
+        client_name: data.parties,
+        created_by: user?.id
+      })
+
+      if (error) throw error
+
+      await loadData()
+      setShowDealForm(false)
+      toast({ title: "Key deal created successfully" })
+    } catch (error) {
+      console.error('Error creating deal:', error)
+      toast({ 
+        title: "Error creating deal", 
+        description: "Failed to create key deal",
+        variant: "destructive" 
+      })
     }
-    setKeyDeals([...keyDeals, newDeal])
-    setShowDealForm(false)
-    toast({ title: "Key deal created successfully" })
   }
 
-  const handleCreateMetric = (data: any) => {
-    const newMetric: SnapshotMetric = {
-      id: snapshotMetrics.length + 1,
-      label: data.label.toUpperCase(),
-      value: data.value,
-      change: data.change,
-      isPositive: parseFloat(data.change.replace(/[^-\d.]/g, '')) >= 0,
-      isActive: data.isActive,
-      category: data.category
+  const handleCreateMetric = async (data: any) => {
+    try {
+      const changeValue = parseFloat(data.change.replace(/[%+]/g, '')) || 0
+      const { error } = await supabase.from('snapshots').insert({
+        title: data.label,
+        description: `${data.category} metric`,
+        value: parseFloat(data.value.replace(/[$,]/g, '')) || 0,
+        change_percentage: changeValue,
+        category: data.category,
+        created_by: user?.id
+      })
+
+      if (error) throw error
+
+      await loadData()
+      setShowMetricForm(false)
+      toast({ title: "Snapshot metric created successfully" })
+    } catch (error) {
+      console.error('Error creating metric:', error)
+      toast({ 
+        title: "Error creating metric", 
+        description: "Failed to create snapshot metric",
+        variant: "destructive" 
+      })
     }
-    setSnapshotMetrics([...snapshotMetrics, newMetric])
-    setShowMetricForm(false)
-    toast({ title: "Snapshot metric created successfully" })
   }
 
-  const toggleReportFeatured = (id: number) => {
+  const toggleReportFeatured = (id: string) => {
     setAnalysisReports(analysisReports.map(report => 
       report.id === id ? { ...report, featured: !report.featured } : report
     ))
   }
 
-  const toggleEventFeatured = (id: number) => {
+  const toggleEventFeatured = (id: string) => {
     setResourceEvents(resourceEvents.map(event => 
       event.id === id ? { ...event, featured: !event.featured } : event
     ))
   }
 
-  const toggleDealFeatured = (id: number) => {
+  const toggleDealFeatured = (id: string) => {
     setKeyDeals(keyDeals.map(deal => 
       deal.id === id ? { ...deal, featured: !deal.featured } : deal
     ))
   }
 
-  const toggleMetricActive = (id: number) => {
+  const toggleMetricActive = (id: string) => {
     setSnapshotMetrics(snapshotMetrics.map(metric => 
       metric.id === id ? { ...metric, isActive: !metric.isActive } : metric
     ))
   }
 
-  const deleteReport = (id: number) => {
+  const deleteReport = (id: string) => {
     setAnalysisReports(analysisReports.filter(report => report.id !== id))
     toast({ title: "Analysis report deleted successfully" })
   }
 
-  const deleteEvent = (id: number) => {
+  const deleteEvent = (id: string) => {
     setResourceEvents(resourceEvents.filter(event => event.id !== id))
     toast({ title: "Resource event deleted successfully" })
   }
 
-  const deleteDeal = (id: number) => {
+  const deleteDeal = (id: string) => {
     setKeyDeals(keyDeals.filter(deal => deal.id !== id))
     toast({ title: "Key deal deleted successfully" })
   }
 
-  const deleteMetric = (id: number) => {
+  const deleteMetric = (id: string) => {
     setSnapshotMetrics(snapshotMetrics.filter(metric => metric.id !== id))
     toast({ title: "Snapshot metric deleted successfully" })
   }
