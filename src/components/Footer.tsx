@@ -7,13 +7,13 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="md:col-span-2">
-            <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent mb-4">
-              Carry & Conquer
-            </div>
-            <p className="text-white/70 mb-6 max-w-md">
-              The premier private equity intelligence platform providing deep insights 
-              on transactions, market trends, and firm strategies.
-            </p>
+          <div className="text-2xl font-bold bg-gradient-to-r from-natural-teal to-natural-green bg-clip-text text-transparent mb-4">
+            NATURAL CURRENCY
+          </div>
+          <p className="text-white/70 mb-6 max-w-md">
+            The premier natural resource intelligence platform providing deep insights 
+            on commodities, sustainability, and earth's most precious assets.
+          </p>
             <div className="flex space-x-4">
               <a href="#" className="text-white/70 hover:text-white transition-colors">
                 LinkedIn
@@ -54,7 +54,7 @@ export function Footer() {
         
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/70 text-sm">
-            © 2024 Carry & Conquer. All rights reserved.
+            © 2024 Natural Currency. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-white/70 hover:text-white transition-colors text-sm">

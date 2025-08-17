@@ -9,10 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Switch } from '@/components/ui/switch'
-import { CalendarIcon, Users, TrendingUp, FileText, Calendar, Settings, Plus, Edit, Trash2, Eye, BarChart3 } from 'lucide-react'
+import { CalendarIcon, Users, TrendingUp, FileText, Calendar, Settings, Plus, Edit, Trash2, Eye, BarChart3, Activity, Globe, Leaf } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 
-interface Article {
+interface AnalysisReport {
   id: number
   title: string
   category: string
@@ -21,9 +21,10 @@ interface Article {
   featured: boolean
   createdAt: string
   views: number
+  resourceType: string
 }
 
-interface Event {
+interface ResourceEvent {
   id: number
   title: string
   type: string
@@ -33,68 +34,85 @@ interface Event {
   registered: number
   status: 'published' | 'draft'
   featured: boolean
+  resourceFocus: string
 }
 
-interface CarouselMetric {
+interface KeyDeal {
+  id: number
+  dealName: string
+  resource: string
+  value: string
+  parties: string
+  status: 'active' | 'completed' | 'pending'
+  featured: boolean
+  region: string
+  sustainability: number
+}
+
+interface SnapshotMetric {
   id: number
   label: string
   value: string
   change: string
   isPositive: boolean
   isActive: boolean
+  category: string
 }
 
 export default function Admin() {
-  const [articles, setArticles] = useState<Article[]>([
-    { id: 1, title: "Private Equity Market Outlook 2024", category: "Market Trends", author: "Sarah Chen", status: "published", featured: true, createdAt: "2024-01-15", views: 1250 },
-    { id: 2, title: "ESG Integration in PE Investments", category: "Key Deals", author: "Michael Rodriguez", status: "published", featured: false, createdAt: "2024-01-12", views: 890 },
-    { id: 3, title: "Tech Sector M&A Analysis", category: "Analysis", author: "David Kim", status: "draft", featured: false, createdAt: "2024-01-10", views: 0 }
+  const [analysisReports, setAnalysisReports] = useState<AnalysisReport[]>([
+    { id: 1, title: "Global Water Resources Market Analysis", category: "Water Resources", author: "Dr. Sarah Chen", status: "published", featured: true, createdAt: "2024-01-15", views: 1850, resourceType: "Water" },
+    { id: 2, title: "Rare Earth Mining Sustainability Report", category: "Mining", author: "Michael Rodriguez", status: "published", featured: false, createdAt: "2024-01-12", views: 1240, resourceType: "Minerals" },
+    { id: 3, title: "Carbon Credit Market Dynamics", category: "Carbon Trading", author: "Dr. Elena Vasquez", status: "draft", featured: false, createdAt: "2024-01-10", views: 0, resourceType: "Carbon" }
   ])
 
-  const [events, setEvents] = useState<Event[]>([
-    { id: 1, title: "PE Summit 2024", type: "Conference", date: "2024-03-15", location: "New York", capacity: 500, registered: 347, status: "published", featured: true },
-    { id: 2, title: "Deal Sourcing Masterclass", type: "Workshop", date: "2024-02-20", location: "Virtual", capacity: 100, registered: 78, status: "published", featured: false },
-    { id: 3, title: "ESG Investment Forum", type: "Panel", date: "2024-04-05", location: "London", capacity: 200, registered: 0, status: "draft", featured: false }
+  const [resourceEvents, setResourceEvents] = useState<ResourceEvent[]>([
+    { id: 1, title: "Global Carbon Markets Summit 2024", type: "Conference", date: "2024-03-15", location: "Geneva", capacity: 800, registered: 647, status: "published", featured: true, resourceFocus: "Carbon Trading" },
+    { id: 2, title: "Sustainable Mining Workshop", type: "Workshop", date: "2024-02-20", location: "Virtual", capacity: 200, registered: 178, status: "published", featured: false, resourceFocus: "Mining" },
+    { id: 3, title: "Water Rights & Trading Forum", type: "Panel", date: "2024-04-05", location: "Cape Town", capacity: 300, registered: 0, status: "draft", featured: false, resourceFocus: "Water" }
   ])
 
-  const [carouselMetrics, setCarouselMetrics] = useState<CarouselMetric[]>([
-    { id: 1, label: "PE DRY POWDER", value: "$3.7T", change: "+8.3%", isPositive: true, isActive: true },
-    { id: 2, label: "AVERAGE DEAL SIZE", value: "$124M", change: "-2.1%", isPositive: false, isActive: true },
-    { id: 3, label: "FUND DEPLOYMENT", value: "67%", change: "+12.4%", isPositive: true, isActive: true },
-    { id: 4, label: "EXIT MULTIPLE", value: "2.8x", change: "+5.7%", isPositive: true, isActive: true },
-    { id: 5, label: "ACTIVE FUNDS", value: "8,947", change: "+15.2%", isPositive: true, isActive: true },
-    { id: 6, label: "PORTFOLIO COMPANIES", value: "11,200+", change: "+9.8%", isPositive: true, isActive: true },
-    { id: 7, label: "MEDIAN IRR", value: "14.2%", change: "-1.3%", isPositive: false, isActive: true },
-    { id: 8, label: "FUNDRAISING YTD", value: "$901B", change: "+22.1%", isPositive: true, isActive: true }
+  const [keyDeals, setKeyDeals] = useState<KeyDeal[]>([
+    { id: 1, dealName: "Amazon Basin Carbon Credits", resource: "Carbon Offsets", value: "$2.8B", parties: "GreenTech Corp / Indigenous Coalition", status: "active", featured: true, region: "South America", sustainability: 95 },
+    { id: 2, dealName: "Lithium Mining Rights - Chile", resource: "Lithium", value: "$1.2B", parties: "EV Materials Inc / Chilean Gov", status: "completed", featured: true, region: "South America", sustainability: 73 },
+    { id: 3, dealName: "North Sea Wind Farm Rights", resource: "Wind Energy", value: "$4.5B", parties: "Nordic Energy / UK Crown Estate", status: "pending", featured: false, region: "Europe", sustainability: 88 }
+  ])
+
+  const [snapshotMetrics, setSnapshotMetrics] = useState<SnapshotMetric[]>([
+    { id: 1, label: "GLOBAL CARBON MARKET", value: "$909B", change: "+15.3%", isPositive: true, isActive: true, category: "Carbon" },
+    { id: 2, label: "WATER FUTURES INDEX", value: "2,847", change: "+8.7%", isPositive: true, isActive: true, category: "Water" },
+    { id: 3, label: "RARE EARTH PRICES", value: "$34,200/T", change: "-3.2%", isPositive: false, isActive: true, category: "Minerals" },
+    { id: 4, label: "RENEWABLE CAPACITY", value: "3.4TW", change: "+22.1%", isPositive: true, isActive: true, category: "Energy" },
+    { id: 5, label: "FOREST CARBON CREDITS", value: "$127/TCO2", change: "+18.9%", isPositive: true, isActive: true, category: "Carbon" },
+    { id: 6, label: "CRITICAL MINERAL RESERVES", value: "47.2M MT", change: "-5.1%", isPositive: false, isActive: true, category: "Minerals" }
   ])
 
   const [activeTab, setActiveTab] = useState("overview")
-  const [showArticleForm, setShowArticleForm] = useState(false)
+  const [showReportForm, setShowReportForm] = useState(false)
   const [showEventForm, setShowEventForm] = useState(false)
-  const [showCarouselForm, setShowCarouselForm] = useState(false)
-  const [editingArticle, setEditingArticle] = useState<Article | null>(null)
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null)
-  const [editingMetric, setEditingMetric] = useState<CarouselMetric | null>(null)
+  const [showDealForm, setShowDealForm] = useState(false)
+  const [showMetricForm, setShowMetricForm] = useState(false)
 
-  const handleCreateArticle = (data: any) => {
-    const newArticle: Article = {
-      id: articles.length + 1,
+  const handleCreateReport = (data: any) => {
+    const newReport: AnalysisReport = {
+      id: analysisReports.length + 1,
       title: data.title,
       category: data.category,
       author: data.author,
       status: data.status,
       featured: data.featured,
       createdAt: new Date().toISOString().split('T')[0],
-      views: 0
+      views: 0,
+      resourceType: data.resourceType
     }
-    setArticles([...articles, newArticle])
-    setShowArticleForm(false)
-    toast({ title: "Article created successfully" })
+    setAnalysisReports([...analysisReports, newReport])
+    setShowReportForm(false)
+    toast({ title: "Analysis report created successfully" })
   }
 
   const handleCreateEvent = (data: any) => {
-    const newEvent: Event = {
-      id: events.length + 1,
+    const newEvent: ResourceEvent = {
+      id: resourceEvents.length + 1,
       title: data.title,
       type: data.type,
       date: data.date,
@@ -102,78 +120,112 @@ export default function Admin() {
       capacity: data.capacity,
       registered: 0,
       status: data.status,
-      featured: data.featured
+      featured: data.featured,
+      resourceFocus: data.resourceFocus
     }
-    setEvents([...events, newEvent])
+    setResourceEvents([...resourceEvents, newEvent])
     setShowEventForm(false)
-    toast({ title: "Event created successfully" })
+    toast({ title: "Resource event created successfully" })
   }
 
-  const toggleArticleFeatured = (id: number) => {
-    setArticles(articles.map(article => 
-      article.id === id ? { ...article, featured: !article.featured } : article
-    ))
-  }
-
-  const toggleEventFeatured = (id: number) => {
-    setEvents(events.map(event => 
-      event.id === id ? { ...event, featured: !event.featured } : event
-    ))
-  }
-
-  const deleteArticle = (id: number) => {
-    setArticles(articles.filter(article => article.id !== id))
-    toast({ title: "Article deleted successfully" })
-  }
-
-  const deleteEvent = (id: number) => {
-    setEvents(events.filter(event => event.id !== id))
-    toast({ title: "Event deleted successfully" })
+  const handleCreateDeal = (data: any) => {
+    const newDeal: KeyDeal = {
+      id: keyDeals.length + 1,
+      dealName: data.dealName,
+      resource: data.resource,
+      value: data.value,
+      parties: data.parties,
+      status: data.status,
+      featured: data.featured,
+      region: data.region,
+      sustainability: data.sustainability
+    }
+    setKeyDeals([...keyDeals, newDeal])
+    setShowDealForm(false)
+    toast({ title: "Key deal created successfully" })
   }
 
   const handleCreateMetric = (data: any) => {
-    const newMetric: CarouselMetric = {
-      id: carouselMetrics.length + 1,
+    const newMetric: SnapshotMetric = {
+      id: snapshotMetrics.length + 1,
       label: data.label.toUpperCase(),
       value: data.value,
       change: data.change,
       isPositive: parseFloat(data.change.replace(/[^-\d.]/g, '')) >= 0,
-      isActive: data.isActive
+      isActive: data.isActive,
+      category: data.category
     }
-    setCarouselMetrics([...carouselMetrics, newMetric])
-    setShowCarouselForm(false)
-    toast({ title: "Metric created successfully" })
+    setSnapshotMetrics([...snapshotMetrics, newMetric])
+    setShowMetricForm(false)
+    toast({ title: "Snapshot metric created successfully" })
+  }
+
+  const toggleReportFeatured = (id: number) => {
+    setAnalysisReports(analysisReports.map(report => 
+      report.id === id ? { ...report, featured: !report.featured } : report
+    ))
+  }
+
+  const toggleEventFeatured = (id: number) => {
+    setResourceEvents(resourceEvents.map(event => 
+      event.id === id ? { ...event, featured: !event.featured } : event
+    ))
+  }
+
+  const toggleDealFeatured = (id: number) => {
+    setKeyDeals(keyDeals.map(deal => 
+      deal.id === id ? { ...deal, featured: !deal.featured } : deal
+    ))
   }
 
   const toggleMetricActive = (id: number) => {
-    setCarouselMetrics(carouselMetrics.map(metric => 
+    setSnapshotMetrics(snapshotMetrics.map(metric => 
       metric.id === id ? { ...metric, isActive: !metric.isActive } : metric
     ))
   }
 
+  const deleteReport = (id: number) => {
+    setAnalysisReports(analysisReports.filter(report => report.id !== id))
+    toast({ title: "Analysis report deleted successfully" })
+  }
+
+  const deleteEvent = (id: number) => {
+    setResourceEvents(resourceEvents.filter(event => event.id !== id))
+    toast({ title: "Resource event deleted successfully" })
+  }
+
+  const deleteDeal = (id: number) => {
+    setKeyDeals(keyDeals.filter(deal => deal.id !== id))
+    toast({ title: "Key deal deleted successfully" })
+  }
+
   const deleteMetric = (id: number) => {
-    setCarouselMetrics(carouselMetrics.filter(metric => metric.id !== id))
-    toast({ title: "Metric deleted successfully" })
+    setSnapshotMetrics(snapshotMetrics.filter(metric => metric.id !== id))
+    toast({ title: "Snapshot metric deleted successfully" })
   }
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b bg-card">
+      <div className="border-b bg-gradient-to-r from-natural-blue via-natural-teal to-natural-green">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-              <p className="text-muted-foreground mt-1">Manage your platform content and events</p>
+              <h1 className="text-3xl font-bold text-white">Natural Currency Admin</h1>
+              <p className="text-white/80 mt-1">Manage natural resource platform content and data</p>
             </div>
             <div className="flex gap-3">
-              <Button onClick={() => setShowArticleForm(true)}>
+              <Button variant="secondary" onClick={() => setShowReportForm(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                New Article
+                New Analysis
               </Button>
-              <Button onClick={() => setShowEventForm(true)}>
+              <Button variant="secondary" onClick={() => setShowEventForm(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 New Event
+              </Button>
+              <Button variant="secondary" onClick={() => setShowDealForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                New Deal
               </Button>
             </div>
           </div>
@@ -182,22 +234,26 @@ export default function Admin() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="content" className="flex items-center gap-2">
+            <TabsTrigger value="analysis" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              Content
+              Analysis
             </TabsTrigger>
             <TabsTrigger value="events" className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               Events
             </TabsTrigger>
-            <TabsTrigger value="carousel" className="flex items-center gap-2">
+            <TabsTrigger value="deals" className="flex items-center gap-2">
+              <Globe className="w-4 h-4" />
+              Key Deals
+            </TabsTrigger>
+            <TabsTrigger value="snapshot" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
-              Carousel
+              Snapshot
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
@@ -210,53 +266,53 @@ export default function Admin() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Articles</CardTitle>
+                  <CardTitle className="text-sm font-medium">Analysis Reports</CardTitle>
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{articles.length}</div>
+                  <div className="text-2xl font-bold">{analysisReports.length}</div>
                   <p className="text-xs text-muted-foreground">
-                    {articles.filter(a => a.status === 'published').length} published
+                    {analysisReports.filter(r => r.status === 'published').length} published
                   </p>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Events</CardTitle>
+                  <CardTitle className="text-sm font-medium">Resource Events</CardTitle>
                   <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{events.length}</div>
+                  <div className="text-2xl font-bold">{resourceEvents.length}</div>
                   <p className="text-xs text-muted-foreground">
-                    {events.filter(e => e.status === 'published').length} published
+                    {resourceEvents.filter(e => e.status === 'published').length} published
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Active Deals</CardTitle>
+                  <Globe className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">
-                    {articles.reduce((sum, article) => sum + article.views, 0).toLocaleString()}
-                  </div>
-                  <p className="text-xs text-muted-foreground">This month</p>
+                  <div className="text-2xl font-bold">{keyDeals.filter(d => d.status === 'active').length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {keyDeals.length} total deals
+                  </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Event Registrations</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium">Sustainability Score</CardTitle>
+                  <Leaf className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {events.reduce((sum, event) => sum + event.registered, 0)}
+                    {Math.round(keyDeals.reduce((sum, deal) => sum + deal.sustainability, 0) / keyDeals.length)}%
                   </div>
-                  <p className="text-xs text-muted-foreground">Total registered</p>
+                  <p className="text-xs text-muted-foreground">Average across deals</p>
                 </CardContent>
               </Card>
             </div>
@@ -264,18 +320,18 @@ export default function Admin() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent Articles</CardTitle>
+                  <CardTitle>Recent Analysis Reports</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {articles.slice(0, 5).map(article => (
-                      <div key={article.id} className="flex items-center justify-between">
+                    {analysisReports.slice(0, 5).map(report => (
+                      <div key={report.id} className="flex items-center justify-between">
                         <div>
-                          <p className="font-medium">{article.title}</p>
-                          <p className="text-sm text-muted-foreground">{article.author} • {article.views} views</p>
+                          <p className="font-medium">{report.title}</p>
+                          <p className="text-sm text-muted-foreground">{report.author} • {report.views} views</p>
                         </div>
-                        <Badge variant={article.status === 'published' ? 'default' : 'secondary'}>
-                          {article.status}
+                        <Badge variant={report.status === 'published' ? 'default' : 'secondary'}>
+                          {report.status}
                         </Badge>
                       </div>
                     ))}
@@ -285,18 +341,18 @@ export default function Admin() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Upcoming Events</CardTitle>
+                  <CardTitle>Key Resource Deals</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {events.slice(0, 5).map(event => (
-                      <div key={event.id} className="flex items-center justify-between">
+                    {keyDeals.slice(0, 5).map(deal => (
+                      <div key={deal.id} className="flex items-center justify-between">
                         <div>
-                          <p className="font-medium">{event.title}</p>
-                          <p className="text-sm text-muted-foreground">{event.date} • {event.location}</p>
+                          <p className="font-medium">{deal.dealName}</p>
+                          <p className="text-sm text-muted-foreground">{deal.resource} • {deal.value}</p>
                         </div>
-                        <Badge variant={event.status === 'published' ? 'default' : 'secondary'}>
-                          {event.registered}/{event.capacity}
+                        <Badge variant={deal.status === 'active' ? 'default' : deal.status === 'completed' ? 'secondary' : 'outline'}>
+                          {deal.status}
                         </Badge>
                       </div>
                     ))}
@@ -306,20 +362,20 @@ export default function Admin() {
             </div>
           </TabsContent>
 
-          {/* Content Management Tab */}
-          <TabsContent value="content" className="space-y-6">
-            {!showArticleForm ? (
+          {/* Analysis Reports Tab */}
+          <TabsContent value="analysis" className="space-y-6">
+            {!showReportForm ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>Content Management</CardTitle>
-                  <CardDescription>Manage articles and publications</CardDescription>
+                  <CardTitle>Analysis Reports Management</CardTitle>
+                  <CardDescription>Manage natural resource analysis reports and research</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Title</TableHead>
-                        <TableHead>Category</TableHead>
+                        <TableHead>Resource Type</TableHead>
                         <TableHead>Author</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Featured</TableHead>
@@ -328,29 +384,29 @@ export default function Admin() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {articles.map(article => (
-                        <TableRow key={article.id}>
-                          <TableCell className="font-medium">{article.title}</TableCell>
-                          <TableCell>{article.category}</TableCell>
-                          <TableCell>{article.author}</TableCell>
+                      {analysisReports.map(report => (
+                        <TableRow key={report.id}>
+                          <TableCell className="font-medium">{report.title}</TableCell>
+                          <TableCell>{report.resourceType}</TableCell>
+                          <TableCell>{report.author}</TableCell>
                           <TableCell>
-                            <Badge variant={article.status === 'published' ? 'default' : 'secondary'}>
-                              {article.status}
+                            <Badge variant={report.status === 'published' ? 'default' : 'secondary'}>
+                              {report.status}
                             </Badge>
                           </TableCell>
                           <TableCell>
                             <Switch 
-                              checked={article.featured} 
-                              onCheckedChange={() => toggleArticleFeatured(article.id)}
+                              checked={report.featured} 
+                              onCheckedChange={() => toggleReportFeatured(report.id)}
                             />
                           </TableCell>
-                          <TableCell>{article.views}</TableCell>
+                          <TableCell>{report.views}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
                               <Button variant="ghost" size="sm">
                                 <Edit className="w-4 h-4" />
                               </Button>
-                              <Button variant="ghost" size="sm" onClick={() => deleteArticle(article.id)}>
+                              <Button variant="ghost" size="sm" onClick={() => deleteReport(report.id)}>
                                 <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
@@ -362,7 +418,7 @@ export default function Admin() {
                 </CardContent>
               </Card>
             ) : (
-              <ArticleForm onSubmit={handleCreateArticle} onCancel={() => setShowArticleForm(false)} />
+              <ReportForm onSubmit={handleCreateReport} onCancel={() => setShowReportForm(false)} />
             )}
           </TabsContent>
 
@@ -371,15 +427,15 @@ export default function Admin() {
             {!showEventForm ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>Event Management</CardTitle>
-                  <CardDescription>Manage events and registrations</CardDescription>
+                  <CardTitle>Resource Events Management</CardTitle>
+                  <CardDescription>Manage natural resource conferences, workshops, and forums</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Title</TableHead>
-                        <TableHead>Type</TableHead>
+                        <TableHead>Resource Focus</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead>Location</TableHead>
                         <TableHead>Capacity</TableHead>
@@ -388,10 +444,10 @@ export default function Admin() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {events.map(event => (
+                      {resourceEvents.map(event => (
                         <TableRow key={event.id}>
                           <TableCell className="font-medium">{event.title}</TableCell>
-                          <TableCell>{event.type}</TableCell>
+                          <TableCell>{event.resourceFocus}</TableCell>
                           <TableCell>{event.date}</TableCell>
                           <TableCell>{event.location}</TableCell>
                           <TableCell>{event.registered}/{event.capacity}</TableCell>
@@ -422,75 +478,101 @@ export default function Admin() {
             )}
           </TabsContent>
 
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Platform Settings</CardTitle>
-                <CardDescription>Configure your platform preferences</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="siteName">Site Name</Label>
-                    <Input id="siteName" defaultValue="Carry & Conquer" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="adminEmail">Admin Email</Label>
-                    <Input id="adminEmail" type="email" defaultValue="admin@carryconquer.com" />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="siteDescription">Site Description</Label>
-                  <Textarea 
-                    id="siteDescription" 
-                    defaultValue="The premier private equity intelligence platform providing deep insights on transactions, market trends, and firm strategies."
-                  />
-                </div>
-
-                <Button>Save Settings</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Carousel Management Tab */}
-          <TabsContent value="carousel" className="space-y-6">
-            {!showCarouselForm ? (
+          {/* Key Deals Tab */}
+          <TabsContent value="deals" className="space-y-6">
+            {!showDealForm ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>Carousel Metrics Management</CardTitle>
-                  <CardDescription>Manage the metrics displayed in the top carousel</CardDescription>
-                  <Button onClick={() => setShowCarouselForm(true)} className="w-fit">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Metric
-                  </Button>
+                  <CardTitle>Key Deals Management</CardTitle>
+                  <CardDescription>Manage major natural resource transactions and deals</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Label</TableHead>
+                        <TableHead>Deal Name</TableHead>
+                        <TableHead>Resource</TableHead>
+                        <TableHead>Value</TableHead>
+                        <TableHead>Region</TableHead>
+                        <TableHead>Sustainability</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Featured</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {keyDeals.map(deal => (
+                        <TableRow key={deal.id}>
+                          <TableCell className="font-medium">{deal.dealName}</TableCell>
+                          <TableCell>{deal.resource}</TableCell>
+                          <TableCell>{deal.value}</TableCell>
+                          <TableCell>{deal.region}</TableCell>
+                          <TableCell>
+                            <Badge variant={deal.sustainability >= 80 ? 'default' : deal.sustainability >= 60 ? 'secondary' : 'destructive'}>
+                              {deal.sustainability}%
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={deal.status === 'active' ? 'default' : deal.status === 'completed' ? 'secondary' : 'outline'}>
+                              {deal.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Switch 
+                              checked={deal.featured} 
+                              onCheckedChange={() => toggleDealFeatured(deal.id)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button variant="ghost" size="sm">
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => deleteDeal(deal.id)}>
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            ) : (
+              <DealForm onSubmit={handleCreateDeal} onCancel={() => setShowDealForm(false)} />
+            )}
+          </TabsContent>
+
+          {/* Snapshot Metrics Tab */}
+          <TabsContent value="snapshot" className="space-y-6">
+            {!showMetricForm ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Snapshot Metrics Management</CardTitle>
+                  <CardDescription>Manage real-time natural resource market indicators</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Metric Label</TableHead>
+                        <TableHead>Category</TableHead>
                         <TableHead>Value</TableHead>
                         <TableHead>Change</TableHead>
-                        <TableHead>Trend</TableHead>
                         <TableHead>Active</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {carouselMetrics.map(metric => (
+                      {snapshotMetrics.map(metric => (
                         <TableRow key={metric.id}>
                           <TableCell className="font-medium">{metric.label}</TableCell>
-                          <TableCell className="font-bold">{metric.value}</TableCell>
-                          <TableCell>
-                            <span className={metric.isPositive ? 'text-green-600' : 'text-red-600'}>
-                              {metric.change}
-                            </span>
-                          </TableCell>
+                          <TableCell>{metric.category}</TableCell>
+                          <TableCell>{metric.value}</TableCell>
                           <TableCell>
                             <Badge variant={metric.isPositive ? 'default' : 'destructive'}>
-                              {metric.isPositive ? 'Up' : 'Down'}
+                              {metric.change}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -516,8 +598,41 @@ export default function Admin() {
                 </CardContent>
               </Card>
             ) : (
-              <MetricForm onSubmit={handleCreateMetric} onCancel={() => setShowCarouselForm(false)} />
+              <MetricForm onSubmit={handleCreateMetric} onCancel={() => setShowMetricForm(false)} />
             )}
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Platform Settings</CardTitle>
+                <CardDescription>Configure Natural Currency platform settings</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="maintenance">Maintenance Mode</Label>
+                    <p className="text-sm text-muted-foreground">Enable maintenance mode for platform updates</p>
+                  </div>
+                  <Switch id="maintenance" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="notifications">Event Notifications</Label>
+                    <p className="text-sm text-muted-foreground">Send notifications for new resource events</p>
+                  </div>
+                  <Switch id="notifications" defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="analytics">Analytics Tracking</Label>
+                    <p className="text-sm text-muted-foreground">Enable detailed platform analytics</p>
+                  </div>
+                  <Switch id="analytics" defaultChecked />
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
@@ -525,12 +640,339 @@ export default function Admin() {
   )
 }
 
-// Metric Form Component
+// Form Components
+function ReportForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onCancel: () => void }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    author: '',
+    status: 'draft',
+    featured: false,
+    resourceType: ''
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSubmit(formData)
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Create Analysis Report</CardTitle>
+        <CardDescription>Add a new natural resource analysis report</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="title">Report Title</Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({...formData, title: e.target.value})}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="category">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Water Resources">Water Resources</SelectItem>
+                  <SelectItem value="Mining">Mining</SelectItem>
+                  <SelectItem value="Carbon Trading">Carbon Trading</SelectItem>
+                  <SelectItem value="Renewable Energy">Renewable Energy</SelectItem>
+                  <SelectItem value="Forestry">Forestry</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="resourceType">Resource Type</Label>
+              <Select value={formData.resourceType} onValueChange={(value) => setFormData({...formData, resourceType: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select resource" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Water">Water</SelectItem>
+                  <SelectItem value="Minerals">Minerals</SelectItem>
+                  <SelectItem value="Carbon">Carbon</SelectItem>
+                  <SelectItem value="Energy">Energy</SelectItem>
+                  <SelectItem value="Timber">Timber</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="author">Author</Label>
+            <Input
+              id="author"
+              value={formData.author}
+              onChange={(e) => setFormData({...formData, author: e.target.value})}
+              required
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Switch 
+              checked={formData.featured} 
+              onCheckedChange={(checked) => setFormData({...formData, featured: checked})}
+            />
+            <Label>Featured Report</Label>
+          </div>
+          <div className="flex gap-3">
+            <Button type="submit">Create Report</Button>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}
+
+function EventForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onCancel: () => void }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    type: '',
+    date: '',
+    location: '',
+    capacity: '',
+    resourceFocus: '',
+    featured: false
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSubmit({...formData, capacity: parseInt(formData.capacity)})
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Create Resource Event</CardTitle>
+        <CardDescription>Add a new natural resource event</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="title">Event Title</Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({...formData, title: e.target.value})}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="type">Event Type</Label>
+              <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Conference">Conference</SelectItem>
+                  <SelectItem value="Workshop">Workshop</SelectItem>
+                  <SelectItem value="Panel">Panel</SelectItem>
+                  <SelectItem value="Summit">Summit</SelectItem>
+                  <SelectItem value="Forum">Forum</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="resourceFocus">Resource Focus</Label>
+              <Select value={formData.resourceFocus} onValueChange={(value) => setFormData({...formData, resourceFocus: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select focus" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Carbon Trading">Carbon Trading</SelectItem>
+                  <SelectItem value="Water">Water</SelectItem>
+                  <SelectItem value="Mining">Mining</SelectItem>
+                  <SelectItem value="Renewable Energy">Renewable Energy</SelectItem>
+                  <SelectItem value="Forestry">Forestry</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData({...formData, date: e.target.value})}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                value={formData.location}
+                onChange={(e) => setFormData({...formData, location: e.target.value})}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="capacity">Capacity</Label>
+              <Input
+                id="capacity"
+                type="number"
+                value={formData.capacity}
+                onChange={(e) => setFormData({...formData, capacity: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Switch 
+              checked={formData.featured} 
+              onCheckedChange={(checked) => setFormData({...formData, featured: checked})}
+            />
+            <Label>Featured Event</Label>
+          </div>
+          <div className="flex gap-3">
+            <Button type="submit">Create Event</Button>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}
+
+function DealForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onCancel: () => void }) {
+  const [formData, setFormData] = useState({
+    dealName: '',
+    resource: '',
+    value: '',
+    parties: '',
+    status: 'active',
+    region: '',
+    sustainability: '',
+    featured: false
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSubmit({...formData, sustainability: parseInt(formData.sustainability)})
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Create Key Deal</CardTitle>
+        <CardDescription>Add a new major natural resource transaction</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="dealName">Deal Name</Label>
+            <Input
+              id="dealName"
+              value={formData.dealName}
+              onChange={(e) => setFormData({...formData, dealName: e.target.value})}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="resource">Resource Type</Label>
+              <Input
+                id="resource"
+                value={formData.resource}
+                onChange={(e) => setFormData({...formData, resource: e.target.value})}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="value">Deal Value</Label>
+              <Input
+                id="value"
+                value={formData.value}
+                onChange={(e) => setFormData({...formData, value: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="parties">Parties Involved</Label>
+            <Input
+              id="parties"
+              value={formData.parties}
+              onChange={(e) => setFormData({...formData, parties: e.target.value})}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="region">Region</Label>
+              <Select value={formData.region} onValueChange={(value) => setFormData({...formData, region: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="North America">North America</SelectItem>
+                  <SelectItem value="South America">South America</SelectItem>
+                  <SelectItem value="Europe">Europe</SelectItem>
+                  <SelectItem value="Asia Pacific">Asia Pacific</SelectItem>
+                  <SelectItem value="Africa">Africa</SelectItem>
+                  <SelectItem value="Middle East">Middle East</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="sustainability">Sustainability Score (%)</Label>
+              <Input
+                id="sustainability"
+                type="number"
+                min="0"
+                max="100"
+                value={formData.sustainability}
+                onChange={(e) => setFormData({...formData, sustainability: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Switch 
+              checked={formData.featured} 
+              onCheckedChange={(checked) => setFormData({...formData, featured: checked})}
+            />
+            <Label>Featured Deal</Label>
+          </div>
+          <div className="flex gap-3">
+            <Button type="submit">Create Deal</Button>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}
+
 function MetricForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onCancel: () => void }) {
   const [formData, setFormData] = useState({
     label: '',
     value: '',
     change: '',
+    category: '',
     isActive: true
   })
 
@@ -542,343 +984,66 @@ function MetricForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onC
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add New Metric</CardTitle>
-        <CardDescription>Create a new metric for the carousel display</CardDescription>
+        <CardTitle>Create Snapshot Metric</CardTitle>
+        <CardDescription>Add a new real-time market indicator</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="label">Metric Label</Label>
-              <Input
-                id="label"
-                placeholder="e.g., TOTAL AUM"
-                value={formData.label}
-                onChange={(e) => setFormData({...formData, label: e.target.value})}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="value">Current Value</Label>
+          <div>
+            <Label htmlFor="label">Metric Label</Label>
+            <Input
+              id="label"
+              value={formData.label}
+              onChange={(e) => setFormData({...formData, label: e.target.value})}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="value">Value</Label>
               <Input
                 id="value"
-                placeholder="e.g., $2.4T"
                 value={formData.value}
                 onChange={(e) => setFormData({...formData, value: e.target.value})}
                 required
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="change">Percentage Change</Label>
+            <div>
+              <Label htmlFor="change">Change (%)</Label>
               <Input
                 id="change"
-                placeholder="e.g., +5.2% or -3.1%"
                 value={formData.change}
                 onChange={(e) => setFormData({...formData, change: e.target.value})}
+                placeholder="+5.2%"
                 required
               />
             </div>
-            <div className="flex items-center space-x-2 mt-8">
-              <Switch
-                id="isActive"
-                checked={formData.isActive}
-                onCheckedChange={(checked) => setFormData({...formData, isActive: checked})}
-              />
-              <Label htmlFor="isActive">Display in carousel</Label>
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button type="submit">Create Metric</Button>
-            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  )
-}
-
-// Article Form Component
-function ArticleForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onCancel: () => void }) {
-  const [formData, setFormData] = useState({
-    title: '',
-    category: '',
-    author: '',
-    subtitle: '',
-    excerpt: '',
-    content: '',
-    status: 'draft',
-    featured: false
-  })
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Article</CardTitle>
-        <CardDescription>Fill in the article details below</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="title">Title *</Label>
-              <Input 
-                id="title" 
-                value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
-                required 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
+            <div>
+              <Label htmlFor="category">Category</Label>
               <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Market Trends">Market Trends</SelectItem>
-                  <SelectItem value="Key Deals">Key Deals</SelectItem>
-                  <SelectItem value="Analysis">Analysis</SelectItem>
-                  <SelectItem value="Industry Insights">Industry Insights</SelectItem>
+                  <SelectItem value="Carbon">Carbon</SelectItem>
+                  <SelectItem value="Water">Water</SelectItem>
+                  <SelectItem value="Minerals">Minerals</SelectItem>
+                  <SelectItem value="Energy">Energy</SelectItem>
+                  <SelectItem value="Forestry">Forestry</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="author">Author</Label>
-              <Input 
-                id="author" 
-                value={formData.author}
-                onChange={(e) => setFormData({...formData, author: e.target.value})}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="subtitle">Subtitle</Label>
-              <Input 
-                id="subtitle" 
-                value={formData.subtitle}
-                onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="excerpt">Excerpt</Label>
-            <Textarea 
-              id="excerpt" 
-              value={formData.excerpt}
-              onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-              placeholder="Brief summary of the article..."
+          <div className="flex items-center space-x-2">
+            <Switch 
+              checked={formData.isActive} 
+              onCheckedChange={(checked) => setFormData({...formData, isActive: checked})}
             />
+            <Label>Active Metric</Label>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="content">Content</Label>
-            <Textarea 
-              id="content" 
-              value={formData.content}
-              onChange={(e) => setFormData({...formData, content: e.target.value})}
-              placeholder="Write your article content here..."
-              className="min-h-[200px]"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="featured"
-                  checked={formData.featured}
-                  onCheckedChange={(checked) => setFormData({...formData, featured: checked})}
-                />
-                <Label htmlFor="featured">Featured Article</Label>
-              </div>
-              
-              <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="submit">
-                Create Article
-              </Button>
-            </div>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  )
-}
-
-// Event Form Component
-function EventForm({ onSubmit, onCancel }: { onSubmit: (data: any) => void, onCancel: () => void }) {
-  const [formData, setFormData] = useState({
-    title: '',
-    type: '',
-    date: '',
-    location: '',
-    capacity: 100,
-    pricing: '',
-    registration: '',
-    description: '',
-    status: 'draft',
-    featured: false
-  })
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Event</CardTitle>
-        <CardDescription>Configure event details and logistics</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="title">Event Title *</Label>
-              <Input 
-                id="title" 
-                value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
-                required 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="type">Event Type *</Label>
-              <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Conference">Conference</SelectItem>
-                  <SelectItem value="Workshop">Workshop</SelectItem>
-                  <SelectItem value="Panel">Panel</SelectItem>
-                  <SelectItem value="Webinar">Webinar</SelectItem>
-                  <SelectItem value="Networking">Networking</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="date">Event Date *</Label>
-              <Input 
-                id="date" 
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                required 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input 
-                id="location" 
-                value={formData.location}
-                onChange={(e) => setFormData({...formData, location: e.target.value})}
-                placeholder="City or Virtual"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="capacity">Capacity</Label>
-              <Input 
-                id="capacity" 
-                type="number"
-                value={formData.capacity}
-                onChange={(e) => setFormData({...formData, capacity: parseInt(e.target.value)})}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="pricing">Pricing</Label>
-              <Input 
-                id="pricing" 
-                value={formData.pricing}
-                onChange={(e) => setFormData({...formData, pricing: e.target.value})}
-                placeholder="Free, $99, etc."
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="registration">Registration Link</Label>
-              <Input 
-                id="registration" 
-                type="url"
-                value={formData.registration}
-                onChange={(e) => setFormData({...formData, registration: e.target.value})}
-                placeholder="https://..."
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Event Description</Label>
-            <Textarea 
-              id="description" 
-              value={formData.description}
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
-              placeholder="Describe the event, agenda, speakers..."
-              className="min-h-[120px]"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="featured"
-                  checked={formData.featured}
-                  onCheckedChange={(checked) => setFormData({...formData, featured: checked})}
-                />
-                <Label htmlFor="featured">Featured Event</Label>
-              </div>
-              
-              <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="submit">
-                Create Event
-              </Button>
-            </div>
+          <div className="flex gap-3">
+            <Button type="submit">Create Metric</Button>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
           </div>
         </form>
       </CardContent>
