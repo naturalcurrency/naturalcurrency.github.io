@@ -98,9 +98,9 @@ export default function Admin() {
   const loadData = async () => {
     try {
       const [reportsResult, eventsResult, dealsResult, metricsResult] = await Promise.all([
-        (supabase as any).from('articles').select('*'),
+        supabase.from('articles').select('*'),
         supabase.from('events').select('*'),
-        supabase.from('key_deals').select('*'),
+        supabase.from('deals').select('*'),
         supabase.from('snapshots').select('*')
       ])
 
@@ -123,7 +123,7 @@ export default function Admin() {
           id: event.id,
           title: event.title,
           type: event.category || 'Event',
-          date: event.event_date ? new Date(event.event_date).toISOString().split('T')[0] : '',
+          date: event.start_date ? new Date(event.start_date).toISOString().split('T')[0] : '',
           location: event.location || '',
           capacity: 100,
           registered: 0,
@@ -207,7 +207,7 @@ export default function Admin() {
       const { error } = await supabase.from('events').insert({
         title: data.title,
         description: data.description || '',
-        event_date: data.date,
+        start_date: data.date,
         location: data.location,
         category: data.resourceFocus,
         priority: 'medium',
@@ -233,7 +233,7 @@ export default function Admin() {
   const handleCreateDeal = async (data: any) => {
     try {
       const dealValue = parseFloat(data.value.replace(/[$,B]/g, '')) || 0
-      const { error } = await supabase.from('key_deals').insert({
+      const { error } = await supabase.from('deals').insert({
         title: data.dealName,
         description: data.resource,
         deal_value: dealValue,
