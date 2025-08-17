@@ -98,7 +98,7 @@ export default function Admin() {
   const loadData = async () => {
     try {
       const [reportsResult, eventsResult, dealsResult, metricsResult] = await Promise.all([
-        supabase.from('analysis_reports').select('*'),
+        (supabase as any).from('articles').select('*'),
         supabase.from('events').select('*'),
         supabase.from('key_deals').select('*'),
         supabase.from('snapshots').select('*')
@@ -178,7 +178,7 @@ export default function Admin() {
 
   const handleCreateReport = async (data: any) => {
     try {
-      const { error } = await supabase.from('analysis_reports').insert({
+      const { error } = await (supabase as any).from('articles').insert({
         title: data.title,
         content: data.content || '',
         summary: data.summary || '',
