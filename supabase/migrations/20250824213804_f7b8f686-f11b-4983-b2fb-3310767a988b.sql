@@ -1,0 +1,50 @@
+-- Seed Middle East & North Africa administrative divisions in one batch using VALUES mapping
+
+WITH data(country_name, code, division_name) AS (
+  VALUES
+    -- Bahrain
+    ('Bahrain','bh','Capital'),('Bahrain','bh','Muharraq'),('Bahrain','bh','Northern'),('Bahrain','bh','Southern'),
+    -- Iran
+    ('Iran','ir','Alborz'),('Iran','ir','Ardabil'),('Iran','ir','Bushehr'),('Iran','ir','Chaharmahal and Bakhtiari'),('Iran','ir','East Azerbaijan'),('Iran','ir','Fars'),('Iran','ir','Gilan'),('Iran','ir','Golestan'),('Iran','ir','Hamadan'),('Iran','ir','Hormozgan'),('Iran','ir','Ilam'),('Iran','ir','Isfahan'),('Iran','ir','Kerman'),('Iran','ir','Kermanshah'),('Iran','ir','Khorasan-e Razavi'),('Iran','ir','Khuzestan'),('Iran','ir','Kohgiluyeh and Boyer-Ahmad'),('Iran','ir','Kurdistan'),('Iran','ir','Lorestan'),('Iran','ir','Markazi'),('Iran','ir','Mazandaran'),('Iran','ir','North Khorasan'),('Iran','ir','Qazvin'),('Iran','ir','Qom'),('Iran','ir','Semnan'),('Iran','ir','Sistan and Baluchestan'),('Iran','ir','South Khorasan'),('Iran','ir','Tehran'),('Iran','ir','West Azerbaijan'),('Iran','ir','Yazd'),('Iran','ir','Zanjan'),
+    -- Iraq
+    ('Iraq','iq','Al Anbar'),('Iraq','iq','Al Muthanna'),('Iraq','iq','Al Qadisiyah'),('Iraq','iq','Babil'),('Iraq','iq','Baghdad'),('Iraq','iq','Basra'),('Iraq','iq','Dhi Qar'),('Iraq','iq','Diyala'),('Iraq','iq','Dohuk'),('Iraq','iq','Erbil'),('Iraq','iq','Halabja'),('Iraq','iq','Karbala'),('Iraq','iq','Kirkuk'),('Iraq','iq','Maysan'),('Iraq','iq','Najaf'),('Iraq','iq','Nineveh'),('Iraq','iq','Saladin'),('Iraq','iq','Sulaymaniyah'),('Iraq','iq','Wasit'),
+    -- Israel
+    ('Israel','il','Central'),('Israel','il','Haifa'),('Israel','il','Jerusalem'),('Israel','il','Northern'),('Israel','il','Southern'),('Israel','il','Tel Aviv'),('Israel','il','Judea and Samaria (disputed)'),
+    -- Jordan
+    ('Jordan','jo','Ajloun'),('Jordan','jo','Amman'),('Jordan','jo','Aqaba'),('Jordan','jo','Balqa'),('Jordan','jo','Irbid'),('Jordan','jo','Jerash'),('Jordan','jo','Karak'),('Jordan','jo','Ma’an'),('Jordan','jo','Madaba'),('Jordan','jo','Mafraq'),('Jordan','jo','Tafilah'),('Jordan','jo','Zarqa'),
+    -- Kuwait
+    ('Kuwait','kw','Al Ahmadi'),('Kuwait','kw','Al Asimah'),('Kuwait','kw','Al Farwaniyah'),('Kuwait','kw','Al Jahra'),('Kuwait','kw','Hawalli'),('Kuwait','kw','Mubarak Al-Kabeer'),
+    -- Lebanon
+    ('Lebanon','lb','Akkar'),('Lebanon','lb','Baalbek-Hermel'),('Lebanon','lb','Beirut'),('Lebanon','lb','Beqaa'),('Lebanon','lb','Mount Lebanon'),('Lebanon','lb','Nabatieh'),('Lebanon','lb','North'),('Lebanon','lb','South'),
+    -- Oman
+    ('Oman','om','Ad Dakhiliyah'),('Oman','om','Ad Dhahirah'),('Oman','om','Al Batinah North'),('Oman','om','Al Batinah South'),('Oman','om','Al Buraimi'),('Oman','om','Al Wusta'),('Oman','om','Dhofar'),('Oman','om','Musandam'),('Oman','om','Muscat'),('Oman','om','Ash Sharqiyah North'),('Oman','om','Ash Sharqiyah South'),
+    -- Palestine (State of Palestine)
+    ('Palestine','ps','Bethlehem'),('Palestine','ps','Deir al-Balah'),('Palestine','ps','Gaza'),('Palestine','ps','Hebron'),('Palestine','ps','Jenin'),('Palestine','ps','Jericho'),('Palestine','ps','Jerusalem'),('Palestine','ps','Khan Yunis'),('Palestine','ps','Nablus'),('Palestine','ps','North Gaza'),('Palestine','ps','Qalqilya'),('Palestine','ps','Rafah'),('Palestine','ps','Ramallah and al-Bireh'),('Palestine','ps','Salfit'),('Palestine','ps','Tubas'),('Palestine','ps','Tulkarm'),
+    -- Qatar
+    ('Qatar','qa','Ad Dawhah'),('Qatar','qa','Al Khawr wa adh Dhakhirah'),('Qatar','qa','Al Wakrah'),('Qatar','qa','Ar Rayyan'),('Qatar','qa','Ash Shamal'),('Qatar','qa','Ash Shihaniyah'),('Qatar','qa','Az Za’ayin'),('Qatar','qa','Umm Salal'),
+    -- Saudi Arabia
+    ('Saudi Arabia','sa','Al Bahah'),('Saudi Arabia','sa','Al Jawf'),('Saudi Arabia','sa','Al Madinah'),('Saudi Arabia','sa','Al Qassim'),('Saudi Arabia','sa','Ar Riyad'),('Saudi Arabia','sa','Asir'),('Saudi Arabia','sa','Eastern'),('Saudi Arabia','sa','Ha’il'),('Saudi Arabia','sa','Jazan'),('Saudi Arabia','sa','Makkah'),('Saudi Arabia','sa','Najran'),('Saudi Arabia','sa','Northern Borders'),('Saudi Arabia','sa','Tabuk'),
+    -- Syria
+    ('Syria','sy','Aleppo'),('Syria','sy','Al-Hasakah'),('Syria','sy','Al-Suwayda'),('Syria','sy','Daraa'),('Syria','sy','Damascus'),('Syria','sy','Deir ez-Zor'),('Syria','sy','Hama'),('Syria','sy','Homs'),('Syria','sy','Idlib'),('Syria','sy','Latakia'),('Syria','sy','Quneitra'),('Syria','sy','Raqqa'),('Syria','sy','Rif Dimashq'),('Syria','sy','Tartus'),
+    -- United Arab Emirates
+    ('United Arab Emirates','ae','Abu Dhabi'),('United Arab Emirates','ae','Ajman'),('United Arab Emirates','ae','Dubai'),('United Arab Emirates','ae','Fujairah'),('United Arab Emirates','ae','Ras Al Khaimah'),('United Arab Emirates','ae','Sharjah'),('United Arab Emirates','ae','Umm Al Quwain'),
+    -- Yemen
+    ('Yemen','ye','’Adan'),('Yemen','ye','Abyan'),('Yemen','ye','Al Bayda’'),('Yemen','ye','Al Dhale’e'),('Yemen','ye','Al Hudaydah'),('Yemen','ye','Al Jawf'),('Yemen','ye','Al Mahrah'),('Yemen','ye','Al Mahwit'),('Yemen','ye','Amanat Al Asimah'),('Yemen','ye','Amran'),('Yemen','ye','Dhamar'),('Yemen','ye','Hadhramaut'),('Yemen','ye','Hajjah'),('Yemen','ye','Ibb'),('Yemen','ye','Lahij'),('Yemen','ye','Ma’rib'),('Yemen','ye','Raymah'),('Yemen','ye','Sa’dah'),('Yemen','ye','Sana’a'),('Yemen','ye','Shabwah'),('Yemen','ye','Socotra'),('Yemen','ye','Ta’izz'),
+    -- North Africa
+    ('Algeria','dz','Adrar'),('Algeria','dz','Aïn Defla'),('Algeria','dz','Aïn Témouchent'),('Algeria','dz','Algiers'),('Algeria','dz','Annaba'),('Algeria','dz','Batna'),('Algeria','dz','Béchar'),('Algeria','dz','Béjaïa'),('Algeria','dz','Biskra'),('Algeria','dz','Blida'),('Algeria','dz','Bordj Bou Arréridj'),('Algeria','dz','Bouïra'),('Algeria','dz','Boumerdès'),('Algeria','dz','Chlef'),('Algeria','dz','Constantine'),('Algeria','dz','Djelfa'),('Algeria','dz','El Bayadh'),('Algeria','dz','El Oued'),('Algeria','dz','El Tarf'),('Algeria','dz','Ghardaïa'),('Algeria','dz','Guelma'),('Algeria','dz','Illizi'),('Algeria','dz','Jijel'),('Algeria','dz','Khenchela'),('Algeria','dz','Laghouat'),('Algeria','dz','M’Sila'),('Algeria','dz','Mascara'),('Algeria','dz','Médéa'),('Algeria','dz','Mila'),('Algeria','dz','Mostaganem'),('Algeria','dz','Naâma'),('Algeria','dz','Oran'),('Algeria','dz','Ouargla'),('Algeria','dz','Oum El Bouaghi'),('Algeria','dz','Relizane'),('Algeria','dz','Saïda'),('Algeria','dz','Sétif'),('Algeria','dz','Sidi Bel Abbès'),('Algeria','dz','Skikda'),('Algeria','dz','Souk Ahras'),('Algeria','dz','Tamanrasset'),('Algeria','dz','Tébessa'),('Algeria','dz','Tiaret'),('Algeria','dz','Tindouf'),('Algeria','dz','Tipaza'),('Algeria','dz','Tissemsilt'),('Algeria','dz','Tizi Ouzou'),('Algeria','dz','Tlemcen'),('Algeria','dz','Touggourt'),('Algeria','dz','Bouira'),('Algeria','dz','Béni Abbès'),('Algeria','dz','Bordj Badji Mokhtar'),('Algeria','dz','El M’Ghair'),('Algeria','dz','El Meniaa'),('Algeria','dz','In Guezzam'),('Algeria','dz','In Salah'),('Algeria','dz','Ouled Djellal'),('Algeria','dz','Timimoun'),
+    ('Egypt','eg','Alexandria'),('Egypt','eg','Aswan'),('Egypt','eg','Asyut'),('Egypt','eg','Beheira'),('Egypt','eg','Beni Suef'),('Egypt','eg','Cairo'),('Egypt','eg','Dakahlia'),('Egypt','eg','Damietta'),('Egypt','eg','Faiyum'),('Egypt','eg','Gharbia'),('Egypt','eg','Giza'),('Egypt','eg','Ismailia'),('Egypt','eg','Kafr El Sheikh'),('Egypt','eg','Luxor'),('Egypt','eg','Matruh'),('Egypt','eg','Minya'),('Egypt','eg','Monufia'),('Egypt','eg','New Valley'),('Egypt','eg','North Sinai'),('Egypt','eg','Port Said'),('Egypt','eg','Qalyubia'),('Egypt','eg','Qena'),('Egypt','eg','Red Sea'),('Egypt','eg','Sharqia'),('Egypt','eg','Sohag'),('Egypt','eg','South Sinai'),('Egypt','eg','Suez'),
+    ('Libya','ly','Al Butnan'),('Libya','ly','Al Jabal al Akhdar'),('Libya','ly','Al Jabal al Gharbi'),('Libya','ly','Al Jfara'),('Libya','ly','Al Jufrah'),('Libya','ly','Al Kufrah'),('Libya','ly','Al Marj'),('Libya','ly','Al Murgub'),('Libya','ly','An Nuqat al Khams'),('Libya','ly','Az Zawiyah'),('Libya','ly','Benghazi'),('Libya','ly','Derna'),('Libya','ly','Ghat'),('Libya','ly','Misrata'),('Libya','ly','Murzuq'),('Libya','ly','Nalut'),('Libya','ly','Sabha'),('Libya','ly','Sirte'),('Libya','ly','Tripoli'),('Libya','ly','Wadi al Hayaa'),('Libya','ly','Wadi ash Shati'),('Libya','ly','Al Wahat'),
+    ('Morocco','ma','Béni Mellal-Khénifra'),('Morocco','ma','Casablanca-Settat'),('Morocco','ma','Drâa-Tafilalet'),('Morocco','ma','Dakhla-Oued Ed-Dahab'),('Morocco','ma','Fès-Meknès'),('Morocco','ma','Guelmim-Oued Noun'),('Morocco','ma','Laâyoune-Sakia El Hamra'),('Morocco','ma','Marrakesh-Safi'),('Morocco','ma','Oriental'),('Morocco','ma','Rabat-Salé-Kénitra'),('Morocco','ma','Souss-Massa'),('Morocco','ma','Tanger-Tétouan-Al Hoceïma'),
+    ('Tunisia','tn','Ariana'),('Tunisia','tn','Béja'),('Tunisia','tn','Ben Arous'),('Tunisia','tn','Bizerte'),('Tunisia','tn','Gabès'),('Tunisia','tn','Gafsa'),('Tunisia','tn','Jendouba'),('Tunisia','tn','Kairouan'),('Tunisia','tn','Kasserine'),('Tunisia','tn','Kébili'),('Tunisia','tn','Kef'),('Tunisia','tn','Mahdia'),('Tunisia','tn','Manouba'),('Tunisia','tn','Médenine'),('Tunisia','tn','Monastir'),('Tunisia','tn','Nabeul'),('Tunisia','tn','Sfax'),('Tunisia','tn','Sidi Bouzid'),('Tunisia','tn','Siliana'),('Tunisia','tn','Sousse'),('Tunisia','tn','Tataouine'),('Tunisia','tn','Tozeur'),('Tunisia','tn','Tunis'),('Tunisia','tn','Zaghouan')
+)
+INSERT INTO snapshot_administrative_divisions (name, slug, country_id)
+SELECT 
+  d.division_name,
+  CONCAT(d.code, '-', LOWER(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(d.division_name,
+      ' ', '-'),'''',''), '’',''), 'á','a'), 'à','a'), 'ä','a'), 'é','e'), 'è','e'), 'ë','e'), 'í','i'), 'ï','i'), 'ó','o')
+  )),
+  c.id
+FROM data d
+JOIN snapshot_countries c ON c.name = d.country_name
+ON CONFLICT (country_id, slug) DO NOTHING;
