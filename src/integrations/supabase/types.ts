@@ -401,7 +401,7 @@ export type Database = {
         }
         Relationships: []
       }
-      snapshot_cities: {
+      snapshot_administrative_divisions: {
         Row: {
           country_id: string
           created_at: string
@@ -619,7 +619,7 @@ export type Database = {
             foreignKeyName: "snapshot_market_metrics_city_id_fkey"
             columns: ["city_id"]
             isOneToOne: false
-            referencedRelation: "snapshot_cities"
+            referencedRelation: "snapshot_administrative_divisions"
             referencedColumns: ["id"]
           },
           {
@@ -912,7 +912,7 @@ export type Database = {
             foreignKeyName: "snapshot_trending_projects_city_id_fkey"
             columns: ["city_id"]
             isOneToOne: false
-            referencedRelation: "snapshot_cities"
+            referencedRelation: "snapshot_administrative_divisions"
             referencedColumns: ["id"]
           },
           {
