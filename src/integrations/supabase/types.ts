@@ -561,9 +561,9 @@ export type Database = {
       }
       snapshot_market_metrics: {
         Row: {
+          administrative_division_id: string | null
           change_direction: string | null
           change_percentage: number | null
-          city_id: string | null
           country_id: string | null
           created_at: string
           current_value: string
@@ -579,9 +579,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          administrative_division_id?: string | null
           change_direction?: string | null
           change_percentage?: number | null
-          city_id?: string | null
           country_id?: string | null
           created_at?: string
           current_value: string
@@ -597,9 +597,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          administrative_division_id?: string | null
           change_direction?: string | null
           change_percentage?: number | null
-          city_id?: string | null
           country_id?: string | null
           created_at?: string
           current_value?: string
@@ -617,7 +617,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "snapshot_market_metrics_city_id_fkey"
-            columns: ["city_id"]
+            columns: ["administrative_division_id"]
             isOneToOne: false
             referencedRelation: "snapshot_administrative_divisions"
             referencedColumns: ["id"]

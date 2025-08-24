@@ -43,7 +43,7 @@ export default function Snapshot() {
       
       if (error) throw error
       
-      setMarketMetrics(data || [])
+      setMarketMetrics((data || []) as MarketMetric[])
     } catch (error) {
       console.error('Error fetching market metrics:', error)
     } finally {
