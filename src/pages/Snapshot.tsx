@@ -1,9 +1,81 @@
+import { useState, useEffect } from "react"
 import { Navigation } from "@/components/Navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp, TrendingDown, Droplets, Zap, Mountain, Trees } from "lucide-react"
+import { SnapshotFilters } from "@/components/SnapshotFilters"
+import { supabase } from "@/integrations/supabase/client"
+
+interface MarketMetric {
+  id: string
+  metric_name: string
+  metric_category: string
+  current_value: string
+  change_percentage: number | null
+  change_direction: string | null
+  region_id: string | null
+  country_id: string | null
+  city_id: string | null
+  sector_id: string | null
+  sub_sector_id: string | null
+}
 
 export default function Snapshot() {
+  const [marketMetrics, setMarketMetrics] = useState<MarketMetric[]>([])
+  const [filteredMetrics, setFilteredMetrics] = useState<MarketMetric[]>([])
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchMarketMetrics()
+  }, [])
+
+  useEffect(() => {
+    applyFilters()
+  }, [marketMetrics, activeFilters])
+
+  const fetchMarketMetrics = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('snapshot_market_metrics')
+        .select('*')
+        .order('metric_name')
+      
+      if (error) throw error
+      
+      setMarketMetrics(data || [])
+    } catch (error) {
+      console.error('Error fetching market metrics:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const applyFilters = () => {
+    let filtered = marketMetrics
+
+    if (activeFilters.regionId) {
+      filtered = filtered.filter(metric => metric.region_id === activeFilters.regionId)
+    }
+    if (activeFilters.countryId) {
+      filtered = filtered.filter(metric => metric.country_id === activeFilters.countryId)
+    }
+    if (activeFilters.cityId) {
+      filtered = filtered.filter(metric => metric.city_id === activeFilters.cityId)
+    }
+    if (activeFilters.sectorId) {
+      filtered = filtered.filter(metric => metric.sector_id === activeFilters.sectorId)
+    }
+    if (activeFilters.subSectorId) {
+      filtered = filtered.filter(metric => metric.sub_sector_id === activeFilters.subSectorId)
+    }
+
+    setFilteredMetrics(filtered)
+  }
+
+  const handleFiltersChange = (filters: Record<string, string>) => {
+    setActiveFilters(filters)
+  }
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -24,6 +96,11 @@ export default function Snapshot() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Filters */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <SnapshotFilters onFiltersChange={handleFiltersChange} />
       </div>
 
       {/* Market Overview Grid */}
