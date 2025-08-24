@@ -8,7 +8,7 @@ import { X } from "lucide-react"
 interface FilterOptions {
   regions: { id: string; name: string; slug: string }[]
   countries: { id: string; name: string; slug: string; region_id: string }[]
-  cities: { id: string; name: string; slug: string; country_id: string }[]
+  administrativeDivisions: { id: string; name: string; slug: string; country_id: string }[]
   sectors: { id: string; name: string; slug: string }[]
   subSectors: { id: string; name: string; slug: string; sector_id: string }[]
 }
@@ -17,7 +17,7 @@ interface SnapshotFiltersProps {
   onFiltersChange: (filters: {
     regionId?: string
     countryId?: string
-    cityId?: string
+    administrativeDivisionId?: string
     sectorId?: string
     subSectorId?: string
   }) => void
@@ -27,7 +27,7 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     regions: [],
     countries: [],
-    cities: [],
+    administrativeDivisions: [],
     sectors: [],
     subSectors: []
   })
@@ -35,14 +35,14 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
   const [selectedFilters, setSelectedFilters] = useState({
     regionId: 'all',
     countryId: 'all',
-    cityId: 'all',
+    administrativeDivisionId: 'all',
     sectorId: 'all',
     subSectorId: 'all'
   })
 
   const [filteredOptions, setFilteredOptions] = useState({
     countries: [] as typeof filterOptions.countries,
-    cities: [] as typeof filterOptions.cities,
+    administrativeDivisions: [] as typeof filterOptions.administrativeDivisions,
     subSectors: [] as typeof filterOptions.subSectors
   })
 
@@ -56,39 +56,39 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
       ? filterOptions.countries.filter(c => c.region_id === selectedFilters.regionId)
       : filterOptions.countries
 
-    // Update filtered cities when country changes
-    const cities = selectedFilters.countryId && selectedFilters.countryId !== 'all'
-      ? filterOptions.cities.filter(c => c.country_id === selectedFilters.countryId)
-      : filterOptions.cities
+    // Update filtered administrative divisions when country changes
+    const administrativeDivisions = selectedFilters.countryId && selectedFilters.countryId !== 'all'
+      ? filterOptions.administrativeDivisions.filter(c => c.country_id === selectedFilters.countryId)
+      : filterOptions.administrativeDivisions
 
     // Update filtered sub-sectors when sector changes
     const subSectors = selectedFilters.sectorId && selectedFilters.sectorId !== 'all'
       ? filterOptions.subSectors.filter(s => s.sector_id === selectedFilters.sectorId)
       : filterOptions.subSectors
 
-    setFilteredOptions({ countries, cities, subSectors })
+    setFilteredOptions({ countries, administrativeDivisions, subSectors })
   }, [selectedFilters.regionId, selectedFilters.countryId, selectedFilters.sectorId, filterOptions])
 
   const fetchFilterOptions = async () => {
     try {
-      const [regionsRes, countriesRes, citiesRes, sectorsRes, subSectorsRes] = await Promise.all([
+      const [regionsRes, countriesRes, administrativeDivisionsRes, sectorsRes, subSectorsRes] = await Promise.all([
         supabase.from('snapshot_geographic_regions').select('id, name, slug').order('name'),
         supabase.from('snapshot_countries').select('id, name, slug, region_id').order('name'),
-        supabase.from('snapshot_cities').select('id, name, slug, country_id').order('name'),
+        supabase.from('snapshot_administrative_divisions').select('id, name, slug, country_id').order('name'),
         supabase.from('snapshot_sectors').select('id, name, slug').order('name'),
         supabase.from('snapshot_sub_sectors').select('id, name, slug, sector_id').order('name')
       ])
 
       if (regionsRes.error) throw regionsRes.error
       if (countriesRes.error) throw countriesRes.error
-      if (citiesRes.error) throw citiesRes.error
+      if (administrativeDivisionsRes.error) throw administrativeDivisionsRes.error
       if (sectorsRes.error) throw sectorsRes.error
       if (subSectorsRes.error) throw subSectorsRes.error
 
       setFilterOptions({
         regions: regionsRes.data || [],
         countries: countriesRes.data || [],
-        cities: citiesRes.data || [],
+        administrativeDivisions: administrativeDivisionsRes.data || [],
         sectors: sectorsRes.data || [],
         subSectors: subSectorsRes.data || []
       })
@@ -103,10 +103,10 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
     // Clear dependent filters when parent changes
     if (filterType === 'regionId') {
       newFilters.countryId = 'all'
-      newFilters.cityId = 'all'
+      newFilters.administrativeDivisionId = 'all'
     }
     if (filterType === 'countryId') {
-      newFilters.cityId = 'all'
+      newFilters.administrativeDivisionId = 'all'
     }
     if (filterType === 'sectorId') {
       newFilters.subSectorId = 'all'
@@ -126,7 +126,7 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
     const clearedFilters = {
       regionId: 'all',
       countryId: 'all',
-      cityId: 'all',
+      administrativeDivisionId: 'all',
       sectorId: 'all',
       subSectorId: 'all'
     }
@@ -181,7 +181,6 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
             <Select 
               value={selectedFilters.countryId}
               onValueChange={(value) => handleFilterChange('countryId', value)}
-              disabled={selectedFilters.regionId === 'all' && filteredOptions.countries.length === 0}
             >
               <SelectTrigger className="bg-white/5 border-white/20 text-white">
                 <SelectValue placeholder="All Countries" />
@@ -200,18 +199,17 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
           <div>
             <label className="text-sm font-medium text-white/80 mb-2 block">State/Province</label>
             <Select 
-              value={selectedFilters.cityId}
-              onValueChange={(value) => handleFilterChange('cityId', value)}
-              disabled={selectedFilters.countryId === 'all' && filteredOptions.cities.length === 0}
+              value={selectedFilters.administrativeDivisionId}
+              onValueChange={(value) => handleFilterChange('administrativeDivisionId', value)}
             >
               <SelectTrigger className="bg-white/5 border-white/20 text-white">
                 <SelectValue placeholder="All States" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All States</SelectItem>
-                {filteredOptions.cities.map((city) => (
-                  <SelectItem key={city.id} value={city.id}>
-                    {city.name}
+                {filteredOptions.administrativeDivisions.map((division) => (
+                  <SelectItem key={division.id} value={division.id}>
+                    {division.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -243,7 +241,6 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
             <Select 
               value={selectedFilters.subSectorId}
               onValueChange={(value) => handleFilterChange('subSectorId', value)}
-              disabled={selectedFilters.sectorId === 'all' && filteredOptions.subSectors.length === 0}
             >
               <SelectTrigger className="bg-white/5 border-white/20 text-white">
                 <SelectValue placeholder="All Sub-sectors" />

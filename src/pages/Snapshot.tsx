@@ -15,7 +15,7 @@ interface MarketMetric {
   change_direction: string | null
   region_id: string | null
   country_id: string | null
-  city_id: string | null
+  administrative_division_id: string | null
   sector_id: string | null
   sub_sector_id: string | null
 }
@@ -60,8 +60,8 @@ export default function Snapshot() {
     if (activeFilters.countryId) {
       filtered = filtered.filter(metric => metric.country_id === activeFilters.countryId)
     }
-    if (activeFilters.cityId) {
-      filtered = filtered.filter(metric => metric.city_id === activeFilters.cityId)
+    if (activeFilters.administrativeDivisionId) {
+      filtered = filtered.filter(metric => metric.administrative_division_id === activeFilters.administrativeDivisionId)
     }
     if (activeFilters.sectorId) {
       filtered = filtered.filter(metric => metric.sector_id === activeFilters.sectorId)
