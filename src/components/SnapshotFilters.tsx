@@ -33,11 +33,11 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
   })
   
   const [selectedFilters, setSelectedFilters] = useState({
-    regionId: '',
-    countryId: '',
-    cityId: '',
-    sectorId: '',
-    subSectorId: ''
+    regionId: 'all',
+    countryId: 'all',
+    cityId: 'all',
+    sectorId: 'all',
+    subSectorId: 'all'
   })
 
   const [filteredOptions, setFilteredOptions] = useState({
@@ -52,17 +52,17 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
 
   useEffect(() => {
     // Update filtered countries when region changes
-    const countries = selectedFilters.regionId 
+    const countries = selectedFilters.regionId && selectedFilters.regionId !== 'all'
       ? filterOptions.countries.filter(c => c.region_id === selectedFilters.regionId)
       : filterOptions.countries
 
     // Update filtered cities when country changes
-    const cities = selectedFilters.countryId
+    const cities = selectedFilters.countryId && selectedFilters.countryId !== 'all'
       ? filterOptions.cities.filter(c => c.country_id === selectedFilters.countryId)
       : filterOptions.cities
 
     // Update filtered sub-sectors when sector changes
-    const subSectors = selectedFilters.sectorId
+    const subSectors = selectedFilters.sectorId && selectedFilters.sectorId !== 'all'
       ? filterOptions.subSectors.filter(s => s.sector_id === selectedFilters.sectorId)
       : filterOptions.subSectors
 
@@ -102,21 +102,21 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
     
     // Clear dependent filters when parent changes
     if (filterType === 'regionId') {
-      newFilters.countryId = ''
-      newFilters.cityId = ''
+      newFilters.countryId = 'all'
+      newFilters.cityId = 'all'
     }
     if (filterType === 'countryId') {
-      newFilters.cityId = ''
+      newFilters.cityId = 'all'
     }
     if (filterType === 'sectorId') {
-      newFilters.subSectorId = ''
+      newFilters.subSectorId = 'all'
     }
     
     setSelectedFilters(newFilters)
     
     // Only send non-empty filters
     const activeFilters = Object.fromEntries(
-      Object.entries(newFilters).filter(([_, value]) => value !== '')
+      Object.entries(newFilters).filter(([_, value]) => value !== '' && value !== 'all')
     )
     
     onFiltersChange(activeFilters)
@@ -124,17 +124,17 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
 
   const clearAllFilters = () => {
     const clearedFilters = {
-      regionId: '',
-      countryId: '',
-      cityId: '',
-      sectorId: '',
-      subSectorId: ''
+      regionId: 'all',
+      countryId: 'all',
+      cityId: 'all',
+      sectorId: 'all',
+      subSectorId: 'all'
     }
     setSelectedFilters(clearedFilters)
     onFiltersChange({})
   }
 
-  const hasActiveFilters = Object.values(selectedFilters).some(value => value !== '')
+  const hasActiveFilters = Object.values(selectedFilters).some(value => value !== '' && value !== 'all')
 
   return (
     <Card className="bg-gradient-card border-white/10 mb-8">
@@ -166,7 +166,7 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
                 <SelectValue placeholder="All Regions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Regions</SelectItem>
+                <SelectItem value="all">All Regions</SelectItem>
                 {filterOptions.regions.map((region) => (
                   <SelectItem key={region.id} value={region.id}>
                     {region.name}
@@ -181,13 +181,13 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
             <Select 
               value={selectedFilters.countryId}
               onValueChange={(value) => handleFilterChange('countryId', value)}
-              disabled={!selectedFilters.regionId && filteredOptions.countries.length === 0}
+              disabled={selectedFilters.regionId === 'all' && filteredOptions.countries.length === 0}
             >
               <SelectTrigger className="bg-white/5 border-white/20 text-white">
                 <SelectValue placeholder="All Countries" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Countries</SelectItem>
+                <SelectItem value="all">All Countries</SelectItem>
                 {filteredOptions.countries.map((country) => (
                   <SelectItem key={country.id} value={country.id}>
                     {country.name}
@@ -202,13 +202,13 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
             <Select 
               value={selectedFilters.cityId}
               onValueChange={(value) => handleFilterChange('cityId', value)}
-              disabled={!selectedFilters.countryId && filteredOptions.cities.length === 0}
+              disabled={selectedFilters.countryId === 'all' && filteredOptions.cities.length === 0}
             >
               <SelectTrigger className="bg-white/5 border-white/20 text-white">
                 <SelectValue placeholder="All States" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All States</SelectItem>
+                <SelectItem value="all">All States</SelectItem>
                 {filteredOptions.cities.map((city) => (
                   <SelectItem key={city.id} value={city.id}>
                     {city.name}
@@ -228,7 +228,7 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
                 <SelectValue placeholder="All Sectors" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Sectors</SelectItem>
+                <SelectItem value="all">All Sectors</SelectItem>
                 {filterOptions.sectors.map((sector) => (
                   <SelectItem key={sector.id} value={sector.id}>
                     {sector.name}
@@ -249,7 +249,7 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
                 <SelectValue placeholder="All Sub-sectors" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Sub-sectors</SelectItem>
+                <SelectItem value="all">All Sub-sectors</SelectItem>
                 {filteredOptions.subSectors.map((subSector) => (
                   <SelectItem key={subSector.id} value={subSector.id}>
                     {subSector.name}
