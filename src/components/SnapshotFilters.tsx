@@ -243,7 +243,7 @@ export function SnapshotFilters({ onFiltersChange }: SnapshotFiltersProps) {
             <Select 
               value={selectedFilters.subSectorId}
               onValueChange={(value) => handleFilterChange('subSectorId', value)}
-              disabled={!selectedFilters.sectorId && filteredOptions.subSectors.length === 0}
+              disabled={selectedFilters.sectorId === 'all' && filteredOptions.subSectors.length === 0}
             >
               <SelectTrigger className="bg-white/5 border-white/20 text-white">
                 <SelectValue placeholder="All Sub-sectors" />
