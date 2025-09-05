@@ -3,47 +3,123 @@ import { Footer } from "@/components/Footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { TrendingUp, Building2, DollarSign, ArrowRight, ExternalLink } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const keyDeals = [
   {
-    title: "Vista Equity Partners Acquires Solera",
-    amount: "$6.5B",
-    date: "March 2024",
-    sector: "Technology",
-    description: "Vista's acquisition of automotive software provider Solera in a take-private transaction.",
+    id: "copper-mountain-acquisition",
+    title: "Freeport-McMoRan Copper Mountain Expansion",
+    amount: "$4.8B",
+    date: "March 2024", 
+    sector: "Mining & Metals",
+    description: "Major expansion of copper mining operations in Arizona, including new processing facilities and increased production capacity to meet growing EV demand.",
     status: "Completed",
-    firms: ["Vista Equity Partners"],
-    multiple: "12.3x"
+    firms: ["Freeport-McMoRan", "Apollo Global Management"],
+    multiple: "8.2x",
+    location: "Arizona, USA",
+    commodity: "Copper",
+    reserves: "2.8 billion pounds",
+    productionCapacity: "450M lbs/year",
+    employees: 3200,
+    sustainability: "Carbon-neutral by 2030",
+    keyMetrics: {
+      revenue: "$18.2B",
+      ebitda: "$6.4B",
+      capex: "$1.2B",
+      reserves: "15+ years"
+    }
   },
   {
-    title: "Blackstone's Retail Portfolio Exit",
-    amount: "$4.2B",
+    id: "lithium-chile-joint-venture", 
+    title: "SQM-Albemarle Chilean Lithium JV",
+    amount: "$7.2B",
     date: "February 2024",
-    sector: "Retail",
-    description: "Strategic exit of retail portfolio companies generating significant returns for LPs.",
-    status: "Completed",
-    firms: ["Blackstone"],
-    multiple: "8.7x"
-  },
-  {
-    title: "KKR Healthcare Acquisition",
-    amount: "$3.8B",
-    date: "January 2024",
-    sector: "Healthcare",
-    description: "Acquisition of leading healthcare services provider with strong recurring revenue model.",
+    sector: "Critical Minerals",
+    description: "Strategic joint venture to develop world's largest lithium reserves in Chile's Atacama Desert, targeting battery-grade lithium for global EV market.",
     status: "Pending",
-    firms: ["KKR"],
-    multiple: "14.2x"
+    firms: ["SQM", "Albemarle Corporation", "KKR"],
+    multiple: "12.8x",
+    location: "Atacama Desert, Chile",
+    commodity: "Lithium",
+    reserves: "58 million tons LCE",
+    productionCapacity: "180,000 MT/year",
+    employees: 1850,
+    sustainability: "Water-neutral extraction technology",
+    keyMetrics: {
+      revenue: "$24.7B",
+      ebitda: "$11.2B", 
+      capex: "$3.8B",
+      reserves: "30+ years"
+    }
   },
   {
-    title: "Apollo Infrastructure Investment",
-    amount: "$5.1B",
-    date: "December 2023",
-    sector: "Infrastructure",
-    description: "Major infrastructure investment in renewable energy assets across North America.",
+    id: "rare-earth-greenland",
+    title: "Greenland Rare Earth Elements Project",
+    amount: "$3.4B", 
+    date: "January 2024",
+    sector: "Rare Earth Elements",
+    description: "Development of strategic rare earth mining project in Greenland, focusing on neodymium and dysprosium for wind turbine and EV motor production.",
     status: "Completed",
-    firms: ["Apollo Global Management"],
-    multiple: "9.4x"
+    firms: ["Energy Transition Ventures", "Blackstone"],
+    multiple: "15.4x",
+    location: "Kvanefjeld, Greenland",
+    commodity: "Rare Earth Elements",
+    reserves: "11.8 million tons REO",
+    productionCapacity: "35,000 MT/year REO",
+    employees: 980,
+    sustainability: "Minimal environmental impact protocol",
+    keyMetrics: {
+      revenue: "$8.9B",
+      ebitda: "$4.1B",
+      capex: "$2.2B", 
+      reserves: "25+ years"
+    }
+  },
+  {
+    id: "cobalt-congo-development",
+    title: "Glencore DRC Cobalt Expansion",
+    amount: "$5.6B",
+    date: "December 2023", 
+    sector: "Battery Metals",
+    description: "Expansion of cobalt mining operations in Democratic Republic of Congo, implementing ethical sourcing standards and community development programs.",
+    status: "Completed",
+    firms: ["Glencore", "Carlyle Group"],
+    multiple: "9.7x",
+    location: "Katanga Province, DRC",
+    commodity: "Cobalt",
+    reserves: "1.2 million tons",
+    productionCapacity: "65,000 MT/year",
+    employees: 12500,
+    sustainability: "Ethical sourcing certification",
+    keyMetrics: {
+      revenue: "$12.3B",
+      ebitda: "$5.8B",
+      capex: "$1.9B",
+      reserves: "20+ years"
+    }
+  },
+  {
+    id: "gold-australia-merger",
+    title: "Newmont-Barrick Australian Assets",
+    amount: "$8.9B",
+    date: "November 2023",
+    sector: "Precious Metals", 
+    description: "Consolidation of gold mining assets across Australia and Papua New Guinea, creating world's largest gold production platform with advanced automation.",
+    status: "Completed",
+    firms: ["Newmont Corporation", "Barrick Gold", "TPG Capital"],
+    multiple: "6.8x",
+    location: "Multiple sites, Australia & PNG", 
+    commodity: "Gold",
+    reserves: "45 million ounces",
+    productionCapacity: "3.2M oz/year",
+    employees: 18750,
+    sustainability: "Net-zero emissions by 2035",
+    keyMetrics: {
+      revenue: "$21.4B",
+      ebitda: "$8.7B",
+      capex: "$2.8B",
+      reserves: "18+ years"
+    }
   }
 ]
 
@@ -82,8 +158,8 @@ export default function KeyDeals() {
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-white/70 mb-12 leading-relaxed">
-              Track the most significant private equity transactions, from mega-deals 
-              to strategic acquisitions shaping the market landscape.
+              Discover major natural resources investments, from critical mineral acquisitions 
+              to strategic mining operations powering the global energy transition.
             </p>
           </div>
         </div>
@@ -129,7 +205,7 @@ export default function KeyDeals() {
               Recent Transactions
             </h2>
             <p className="text-xl text-white/70">
-              Latest high-impact deals in the private equity market
+              Latest high-impact deals in natural resources and critical minerals
             </p>
           </div>
 
@@ -187,13 +263,15 @@ export default function KeyDeals() {
                       <div className="font-medium text-white">{deal.firms[0]}</div>
                     </div>
                     <div className="flex justify-end">
-                      <Button 
-                        variant="outline" 
-                        className="border-gray-700 bg-gray-800 hover:bg-gray-700 text-white transition-all duration-300"
-                      >
-                        View Details
-                        <ExternalLink className="ml-2 w-4 h-4" />
-                      </Button>
+                      <Link to={`/key-deals/${deal.id}`}>
+                        <Button 
+                          variant="outline" 
+                          className="border-gray-700 bg-gray-800 hover:bg-gray-700 text-white transition-all duration-300"
+                        >
+                          View Details
+                          <ExternalLink className="ml-2 w-4 h-4" />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </CardContent>
@@ -217,10 +295,10 @@ export default function KeyDeals() {
               <h3 className="text-2xl font-bold text-white mb-6">Deal Volume by Sector</h3>
               <div className="space-y-4">
                 {[
-                  { sector: "Technology", percentage: 34, color: "green-400" },
-                  { sector: "Healthcare", percentage: 28, color: "teal-400" },
-                  { sector: "Financial Services", percentage: 22, color: "cyan-400" },
-                  { sector: "Consumer", percentage: 16, color: "blue-400" }
+                  { sector: "Battery Metals", percentage: 38, color: "green-400" },
+                  { sector: "Precious Metals", percentage: 24, color: "teal-400" },
+                  { sector: "Critical Minerals", percentage: 22, color: "cyan-400" },
+                  { sector: "Rare Earth Elements", percentage: 16, color: "blue-400" }
                 ].map((item, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center">

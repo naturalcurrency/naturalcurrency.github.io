@@ -9,6 +9,7 @@ import Snapshot from "./pages/Snapshot";
 import Analysis from "./pages/Analysis";
 import Events from "./pages/Events";
 import KeyDeals from "./pages/KeyDeals";
+import DealDetails from "./pages/DealDetails";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/analysis" element={<Analysis />} />
             <Route path="/events" element={<Events />} />
             <Route path="/key-deals" element={<KeyDeals />} />
+            <Route path="/key-deals/:dealId" element={<DealDetails />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
